@@ -1,0 +1,21 @@
+{
+  "cookie_name": "uniplaces",
+  "expires": "Thu, 5 Dec 2013 22:12:31 UTC",
+  "default_deployment": "A",
+  "proxy_port": "8000",
+
+  "deployments": [
+  {
+    "label": "A",
+    "weight": "600",
+    "addr": "www.uniplaces.com",
+    "port": "80"
+  },
+  {
+    "label": "B",
+    "weight": "400",
+    "addr": "staging.uniplaces.net",
+    "port": "80"
+  }
+  ]
+}
