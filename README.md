@@ -1,4 +1,5 @@
-### Robin ###
+robin
+=====
 
 ### UniPlaces Proxy ###
 
@@ -10,7 +11,7 @@
 ### Directory Structure
 ├── abproxy
 │   ├── etc
-│   │   └── config.json
+│   │   └── config.json.sample
 │   ├── package.json
 │   ├── proxy.js
 │   └── README.md
@@ -35,6 +36,9 @@ npm install etc
 
 
 ### To run
+Create the configuration file config.json.
+Sample can be found at etc/config.json.sample
+
 From the abproxy folder,
 node proxy
 
