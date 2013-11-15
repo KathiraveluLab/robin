@@ -1,6 +1,6 @@
 {
   "cookie_name": "uniplaces",
-  "expires": "Thu, 5 Dec 2013 22:12:31 UTC",
+  "expires": "2592000000",
   "default_deployment": "A",
   "proxy_port": "8000",
 

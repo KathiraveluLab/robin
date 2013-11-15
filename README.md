@@ -34,6 +34,8 @@ npm install http-proxy
 * Install the configuration (JSON) loader, node-etc
 npm install etc
 
+* Install cookies project, node-cookies
+npm install cookies
 
 ### To run
 Create the configuration file config.json.

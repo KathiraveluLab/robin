@@ -1,5 +1,6 @@
 var httpProxy = require('http-proxy/lib/node-http-proxy');
 var etc = require('etc');
+var Cookies = require('cookies');
 
 var conf = etc().argv().env().etc();
 var chunk = conf.toJSON();
@@ -7,16 +8,29 @@ var chunk = conf.toJSON();
 var noOfDeployments = chunk.deployments.length;
 var defaultDeployment;
 var maximumRandomNumber = 1000;
+var cookieName = chunk.cookie_name;
+var unsignedCookie;
 
 var addresses = initAddresses();
 var pport = initProxyPort();
+var expiryTime = setExpiryTime();
 
-httpProxy.createServer(function (req, res, proxy) {
-    target = matchProxy();
- 
+var cookies;
+var domain;
+var set = false;
+var target;
+
+var server = httpProxy.createServer(function (req, res, proxy) {
+    if (!set) {
+        cookies = new Cookies(req, res);
+        target = matchProxy(res);
+        cookies.set("unsigned",cookieName, {expires: expiryTime}, {domain: target});
+        res.writeHead( 302, { "Location": "/" } )
+        set = true;
+        return res.end();
+     }
     console.log('balancing request to: ', target);
-    proxy.proxyRequest(req, res, target);
-    
+    proxy.proxyRequest(req, res, target);  
 }).listen(pport);
 
 function initAddresses() {
@@ -33,13 +47,13 @@ function initAddresses() {
     return deployments;
 }
 
-function matchProxy() {
+function matchProxy(res) {
     var randomnumber= generateRandomNumber();
     var depWeight;
     for (var i = 0; i < noOfDeployments; i++) {
         depWeight = chunk.deployments[i].weight;
         if (randomnumber < depWeight) {
-            return addresses[i];
+            return addresses[i];     
         } else {
             randomnumber = randomnumber - depWeight;
         }
@@ -60,4 +74,11 @@ function initProxyPort() {
         port = chunk.proxy_port;
     }
     return port;
+}
+
+function setExpiryTime() {
+    var currentTimeInMillis = new Date().getTime();
+    var expires = parseInt(chunk.expires);
+    var expiryTime = new Date(currentTimeInMillis + expires);
+    return expiryTime;
 }
