@@ -10,25 +10,42 @@ var defaultDeployment;
 var maximumRandomNumber = 1000;
 var cookieName = chunk.cookie_name;
 var unsignedCookie;
+var cookieValue;
+var domainIndex = 0;
 
 var addresses = initAddresses();
 var pport = initProxyPort();
 var expiryTime = setExpiryTime();
+var contains;
 
 var cookies;
 var domain;
-var set = false;
 var target;
 
 var server = httpProxy.createServer(function (req, res, proxy) {
-    if (!set) {
-        cookies = new Cookies(req, res);
+    cookies = new Cookies(req, res);
+    unsignedCookie = cookies.get(cookieName);
+    console.log('Cookie: ', unsignedCookie);
+
+    if (unsignedCookie == undefined) {
+        cookieValue = cookieName + domainIndex;
         target = matchProxy(res);
-        cookies.set("unsigned",cookieName, {expires: expiryTime}, {domain: target});
+        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: target});
         res.writeHead( 302, { "Location": "/" } )
-        set = true;
+        console.log("inside undefined**");
         return res.end();
      }
+
+    else if (unsignedCookie.indexOf(cookieName) > -1) {
+        console.log('***');
+        var splitted = unsignedCookie.split(cookieName, 2);
+        if (splitted[1]!='') {
+             domainIndex = splitted[1];
+        }
+        console.log('DOMAIN INDEX', domainIndex);
+        target = addresses[domainIndex];
+     }
+
     console.log('balancing request to: ', target);
     proxy.proxyRequest(req, res, target);  
 }).listen(pport);
@@ -53,7 +70,8 @@ function matchProxy(res) {
     for (var i = 0; i < noOfDeployments; i++) {
         depWeight = chunk.deployments[i].weight;
         if (randomnumber < depWeight) {
-            return addresses[i];     
+            domainIndex = i;   
+            return addresses[i];  
         } else {
             randomnumber = randomnumber - depWeight;
         }
