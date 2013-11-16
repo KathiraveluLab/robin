@@ -6,6 +6,8 @@ Robin
 ### Features
 * Proxies the deployments.
 * Based on the weight function, directs the traffic to the deployments.
+* Uses cookies to facilitate stickiness, such that the same deployment
+will be used to serve the same user till the cookie expires.
 
 
 ### Directory Structure
@@ -27,21 +29,16 @@ sudo su
 curl https://npmjs.org/install.sh | sh
 
 
-### Installing the dependencies
-* Install node-http-proxy
-npm install http-proxy
+### Installing and Configuring Robin
+* To install Robin, installing the dependencies,
+npm install 
+from the robin root directory
 
-* Install the configuration (JSON) loader, node-etc
-npm install etc
-
-* Install cookies project, node-cookies
-npm install cookies
-
-### To run
 Create the configuration file config.json.
 Sample can be found at etc/config.json.sample
 
-From the abproxy folder,
+### To run
+From the robin root directory
 node proxy
 
 To be able to bind port 80 to the proxy
