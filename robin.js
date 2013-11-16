@@ -20,12 +20,14 @@ var expiryTime = setExpiryTime();
 var cookies, target;
 
 var server = httpProxy.createServer(function (req, res, proxy) {
+    var robin = new Robin();
+
     cookies = new Cookies(req, res);
     unsignedCookie = cookies.get(cookieName);
 
     if (unsignedCookie == undefined) {
         cookieValue = cookieName + domainIndex;
-        target = matchProxy(res);
+        target = robin.matchProxy(res);
         cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: target});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
@@ -41,21 +43,10 @@ var server = httpProxy.createServer(function (req, res, proxy) {
     proxy.proxyRequest(req, res, target);
 }).listen(pport);
 
-function initAddresses() {
-    var deployments = [];
-    for (var i = 0; i < noOfDeployments; i ++) {
-        deployments[i] = {
-            host: chunk.deployments[i].addr,
-            port: chunk.deployments[i].port
-        };
-        if (chunk.deployments[i].label == chunk.default_deployment) {
-            defaultDeployment = deployments[i];
-        }
-    }
-    return deployments;
+function Robin() {
 }
 
-function matchProxy(res) {
+Robin.prototype.matchProxy = function (res) {
     var randomnumber= generateRandomNumber();
     var depWeight;
     for (var i = 0; i < noOfDeployments; i++) {
@@ -68,6 +59,20 @@ function matchProxy(res) {
         }
     }
     return defaultDeployment;
+}
+
+function initAddresses() {
+    var deployments = [];
+    for (var i = 0; i < noOfDeployments; i ++) {
+        deployments[i] = {
+            host: chunk.deployments[i].addr,
+            port: chunk.deployments[i].port
+        };
+        if (chunk.deployments[i].label == chunk.default_deployment) {
+            defaultDeployment = deployments[i];
+        }
+    }
+    return deployments;
 }
 
 function generateRandomNumber() {
