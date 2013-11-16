@@ -16,7 +16,7 @@ will be used to serve the same user till the cookie expires.
 │   │   └── config.json.sample
 │   ├── LICENSE
 │   ├── package.json
-│   ├── proxy.js
+│   ├── robin.js
 │   └── README.md
 
 
@@ -58,7 +58,7 @@ Sample can be found at etc/config.json.sample
 
 ### To run
 From the robin root directory
-node proxy
+node robin
 
 To be able to bind port 80 to the proxy
 sudo setcap 'cap_net_bind_service=+ep' path_to_node

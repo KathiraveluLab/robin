@@ -2,7 +2,7 @@
   "name": "robin",
   "version": "0.1.0",
   "description": "A proxy for A/B Testing",
-  "main": "proxy.js",
+  "main": "robin.js",
   "author": "Pradeeban Kathiravelu <pradeeban@uniplaces.com>",
   "repository": {
     "type": "git",
