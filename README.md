@@ -4,16 +4,17 @@ Robin
 ### UniPlaces Proxy ###
 
 ### Features
-* Proxies the deployments.
+* Proxies the deployments for A/B Testing.
 * Based on the weight function, directs the traffic to the deployments.
 * Uses cookies to facilitate stickiness, such that the same deployment
 will be used to serve the same user till the cookie expires.
 
 
 ### Directory Structure
-├── abproxy
+├── robin
 │   ├── etc
 │   │   └── config.json.sample
+│   ├── LICENSE
 │   ├── package.json
 │   ├── proxy.js
 │   └── README.md
@@ -29,13 +30,31 @@ sudo su
 curl https://npmjs.org/install.sh | sh
 
 
-### Installing and Configuring Robin
+### Installing Robin
 * To install Robin, installing the dependencies,
 npm install 
 from the robin root directory
 
+### Configuration
 Create the configuration file config.json.
 Sample can be found at etc/config.json.sample
+
+{
+  "cookie_name": "uniplaces", <-- The name of the cookie.->
+  "expires": "2592000000", <-- expired after, in milliseconds.->
+  "default_deployment": "A", <-- The default deployment.->
+  "proxy_port": "8000", <-- Optional port for the proxy. Default, 80.->
+
+  "deployments": [ <-- Can be more than two deployments. ->
+  {
+    "label": "A", <-- Label of the deployment->
+    "weight": "600", <-- The sum of the weights should be 1000.-> 
+    "addr": "www.uniplaces.com",
+    "port": "80"
+  },
+  <-- ... -->
+  ]
+}
 
 ### To run
 From the robin root directory
