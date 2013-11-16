@@ -25,28 +25,22 @@ var target;
 var server = httpProxy.createServer(function (req, res, proxy) {
     cookies = new Cookies(req, res);
     unsignedCookie = cookies.get(cookieName);
-    console.log('Cookie: ', unsignedCookie);
 
     if (unsignedCookie == undefined) {
         cookieValue = cookieName + domainIndex;
         target = matchProxy(res);
         cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: target});
         res.writeHead( 302, { "Location": "/" } )
-        console.log("inside undefined**");
         return res.end();
      }
 
     else if (unsignedCookie.indexOf(cookieName) > -1) {
-        console.log('***');
         var splitted = unsignedCookie.split(cookieName, 2);
         if (splitted[1]!='') {
              domainIndex = splitted[1];
         }
-        console.log('DOMAIN INDEX', domainIndex);
         target = addresses[domainIndex];
      }
-
-    console.log('balancing request to: ', target);
     proxy.proxyRequest(req, res, target);  
 }).listen(pport);
 
@@ -81,7 +75,6 @@ function matchProxy(res) {
 
 function generateRandomNumber() {
     var randomNumber = Math.floor(Math.random()*(maximumRandomNumber+1));
-    console.log('Random Number: ' ,randomNumber);
     return randomNumber;
 }
 
