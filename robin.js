@@ -1,6 +1,6 @@
-var httpProxy = require('http-proxy/lib/node-http-proxy');
-var etc = require('etc');
-var Cookies = require('cookies');
+var httpProxy = require('http-proxy/lib/node-http-proxy'),
+    etc = require('etc'),
+    Cookies = require('cookies');
 
 var conf = etc().argv().env().etc();
 var chunk = conf.toJSON();
@@ -16,11 +16,8 @@ var domainIndex = 0;
 var addresses = initAddresses();
 var pport = initProxyPort();
 var expiryTime = setExpiryTime();
-var contains;
 
-var cookies;
-var domain;
-var target;
+var cookies, target;
 
 var server = httpProxy.createServer(function (req, res, proxy) {
     cookies = new Cookies(req, res);
@@ -41,7 +38,7 @@ var server = httpProxy.createServer(function (req, res, proxy) {
         }
         target = addresses[domainIndex];
      }
-    proxy.proxyRequest(req, res, target);  
+    proxy.proxyRequest(req, res, target);
 }).listen(pport);
 
 function initAddresses() {
@@ -64,8 +61,8 @@ function matchProxy(res) {
     for (var i = 0; i < noOfDeployments; i++) {
         depWeight = chunk.deployments[i].weight;
         if (randomnumber < depWeight) {
-            domainIndex = i;   
-            return addresses[i];  
+            domainIndex = i;
+            return addresses[i];
         } else {
             randomnumber = randomnumber - depWeight;
         }
@@ -79,9 +76,9 @@ function generateRandomNumber() {
 }
 
 function initProxyPort() {
-    var port=80;
-    if (chunk.proxy_port>0 && 
-        chunk.proxy_port<65535) { //  e.g: "proxy_port": "8000" in config.json,
+    var port = 80;
+    if (chunk.proxy_port > 0 &&
+        chunk.proxy_port < 65535) { // e.g: "proxy_port": "8000" in config.json,
         port = chunk.proxy_port;
     }
     return port;
