@@ -17,10 +17,9 @@ var pport = initProxyPort();
 var expiryTime = setExpiryTime();
 
 var cookies, target;
+var robin = new Robin();
 
 var server = httpProxy.createServer(function (req, res, proxy) {
-    var robin = new Robin();
-
     cookies = new Cookies(req, res);
     unsignedCookie = cookies.get(cookieName);
 
@@ -94,5 +93,3 @@ function setExpiryTime() {
     var expiryTime = new Date(currentTimeInMillis + expires);
     return expiryTime;
 }
-
-
