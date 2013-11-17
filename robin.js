@@ -9,8 +9,7 @@ var noOfDeployments = chunk.deployments.length;
 var defaultDeployment;
 var maximumRandomNumber = 1000;
 var cookieName = chunk.cookie_name;
-var unsignedCookie;
-var cookieValue;
+var unsignedCookie, cookieValue;
 var domainIndex = 0;
 
 var addresses = initAddresses();
@@ -47,7 +46,7 @@ function Robin() {
 }
 
 Robin.prototype.matchProxy = function (res) {
-    var randomnumber= generateRandomNumber();
+    var randomnumber= this.generateRandomNumber();
     var depWeight;
     for (var i = 0; i < noOfDeployments; i++) {
         depWeight = chunk.deployments[i].weight;
@@ -59,6 +58,11 @@ Robin.prototype.matchProxy = function (res) {
         }
     }
     return defaultDeployment;
+}
+
+Robin.prototype.generateRandomNumber = function () {
+    var randomNumber = Math.floor(Math.random()*(maximumRandomNumber+1));
+    return randomNumber;
 }
 
 function initAddresses() {
@@ -73,11 +77,6 @@ function initAddresses() {
         }
     }
     return deployments;
-}
-
-function generateRandomNumber() {
-    var randomNumber = Math.floor(Math.random()*(maximumRandomNumber+1));
-    return randomNumber;
 }
 
 function initProxyPort() {
@@ -95,3 +94,5 @@ function setExpiryTime() {
     var expiryTime = new Date(currentTimeInMillis + expires);
     return expiryTime;
 }
+
+
