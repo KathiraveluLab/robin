@@ -2,13 +2,13 @@ var httpProxy = require('http-proxy/lib/node-http-proxy'),
     etc = require('etc'),
     Cookies = require('cookies');
 
-var conf = etc().argv().env().etc();
-var chunk = conf.toJSON();
+var configObject = etc().argv().env().etc();
+var conf = configObject.toJSON();
 
-var noOfDeployments = chunk.deployments.length;
+var noOfDeployments = conf.deployments.length;
 var defaultDeployment;
 var maximumRandomNumber = 1000;
-var cookieName = chunk.cookie_name;
+var cookieName = conf.cookie_name;
 var unsignedCookie, cookieValue;
 var domainIndex = 0;
 
@@ -48,7 +48,7 @@ Robin.prototype.matchProxy = function (res) {
     var randomnumber= this.generateRandomNumber();
     var depWeight;
     for (var i = 0; i < noOfDeployments; i++) {
-        depWeight = chunk.deployments[i].weight;
+        depWeight = conf.deployments[i].weight;
         if (randomnumber < depWeight) {
             domainIndex = i;
             return addresses[i];
@@ -68,10 +68,10 @@ function initAddresses() {
     var deployments = [];
     for (var i = 0; i < noOfDeployments; i ++) {
         deployments[i] = {
-            host: chunk.deployments[i].addr,
-            port: chunk.deployments[i].port
+            host: conf.deployments[i].addr,
+            port: conf.deployments[i].port
         };
-        if (chunk.deployments[i].label == chunk.default_deployment) {
+        if (conf.deployments[i].label == conf.default_deployment) {
             defaultDeployment = deployments[i];
         }
     }
@@ -80,12 +80,12 @@ function initAddresses() {
 
 function initProxyPort() {
     var defaultPort = 80;
-    return chunk.proxy_port || defaultPort; // "proxy_port" is optional in config.json.
+    return conf.proxy_port || defaultPort; // "proxy_port" is optional in config.json.
 }
 
 function setExpiryTime() {
     var currentTimeInMillis = new Date().getTime();
-    var expires = parseInt(chunk.expires);
+    var expires = parseInt(conf.expires);
     var expiryTime = new Date(currentTimeInMillis + expires);
     return expiryTime;
 }
