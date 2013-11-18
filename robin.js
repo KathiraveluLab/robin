@@ -80,11 +80,7 @@ function initAddresses() {
 
 function initProxyPort() {
     var port = 80;
-    if (chunk.proxy_port > 0 &&
-        chunk.proxy_port < 65535) { // e.g: "proxy_port": "8000" in config.json,
-        port = chunk.proxy_port;
-    }
-    return port;
+    return chunk.proxy_port || port; // "proxy_port" is optional in config.json.
 }
 
 function setExpiryTime() {
