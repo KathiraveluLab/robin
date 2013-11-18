@@ -79,8 +79,8 @@ function initAddresses() {
 }
 
 function initProxyPort() {
-    var port = 80;
-    return chunk.proxy_port || port; // "proxy_port" is optional in config.json.
+    var defaultPort = 80;
+    return chunk.proxy_port || defaultPort; // "proxy_port" is optional in config.json.
 }
 
 function setExpiryTime() {
