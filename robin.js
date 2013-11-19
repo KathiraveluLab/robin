@@ -21,12 +21,11 @@ var robin = new Robin();
 var server = httpProxy.createServer(function (req, res, proxy) {
     cookies = new Cookies(req, res);
     receivedValue = cookies.get(cookieName);
-    browserDomain = req.headers.host + req.url;
 
     if (receivedValue == undefined) {
         target = robin.matchProxy(res);
         cookieValue = labels[domainIndex];
-        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: browserDomain});
+        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
@@ -57,10 +56,9 @@ Robin.prototype.findDeployment = function (depLabel) {
     for (var i = 0; i < noOfDeployments; i++) {
         if (depLabel == labels[i]) {
             return addresses[i];
-        } else {
-            return defaultDeployment;
-        }
+        } 
     }
+    return defaultDeployment;
 }
 
 Robin.prototype.generateRandomNumber = function () {
