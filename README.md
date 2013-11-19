@@ -13,7 +13,7 @@ will be used to serve the same user till the cookie expires.
 ### Directory Structure
 ├── robin
 │   ├── etc
-│   │   └── config.json.sample
+│   │   └── config.sample.json
 │   ├── LICENSE
 │   ├── package.json
 │   ├── robin.js
@@ -37,12 +37,12 @@ from the robin root directory
 
 ### Configuration
 Create the configuration file config.json.
-Sample can be found at etc/config.json.sample
+Sample can be found at etc/config.sample.json.
 
 {
   "cookie_name": "uniplaces", <-- The name of the cookie.->
   "expires": "2592000000", <-- expired after, in milliseconds.->
-  "default_deployment": "A", <-- The default deployment.->
+  "default_deployment": "www.uniplaces.com", <-- The default deployment.->
   "proxy_port": "8000", <-- Optional port for the proxy. Default, 80.->
 
   "deployments": [ <-- Can be more than two deployments. ->
