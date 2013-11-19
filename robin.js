@@ -21,11 +21,12 @@ var robin = new Robin();
 var server = httpProxy.createServer(function (req, res, proxy) {
     cookies = new Cookies(req, res);
     receivedValue = cookies.get(cookieName);
+    browserDomain = req.headers.host + req.url;
 
     if (receivedValue == undefined) {
         target = robin.matchProxy(res);
         cookieValue = labels[domainIndex];
-        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: target});
+        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: browserDomain});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
