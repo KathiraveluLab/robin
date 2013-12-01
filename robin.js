@@ -73,7 +73,6 @@ var server = httpProxy.createServer(function (req, res, proxy) {
     proxy.proxyRequest(req, res, robin.target);
 }).listen(robin.pport);
 
-
 Robin.prototype.matchProxy = function (res) {
     var randomnumber= this.generateRandomNumber();
     var depWeight;
