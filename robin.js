@@ -5,6 +5,10 @@ var httpProxy = require('http-proxy/lib/node-http-proxy'),
 Robin.prototype.maximumRandomNumber = 1000;
 
 function Robin() {
+    if (arguments.callee._singletonInstance)
+        return arguments.callee._singletonInstance;
+    arguments.callee._singletonInstance = this;
+
     this.configObject = etc().argv().env().etc();
     this.conf = this.configObject.toJSON();
     this.noOfDeployments = this.conf.deployments.length;
@@ -12,7 +16,7 @@ function Robin() {
     this.cookies;
     this.receivedValue;
     this.cookieValue;
-    this.addresses = this.initAddresses();
+    this.addresses = this.initDeployments();
     this.pport = this.initProxyPort();
     this.expiryTime = this.setExpiryTime();
     this.labels = this.initLabels();
@@ -21,7 +25,7 @@ function Robin() {
     this.target;
 }
 
-Robin.prototype.initAddresses = function () {
+Robin.prototype.initDeployments = function () {
     var deployments = [];
     for (var i = 0; i < this.noOfDeployments; i ++) {
         deployments[i] = {
