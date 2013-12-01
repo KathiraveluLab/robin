@@ -7,8 +7,8 @@ var conf = configObject.toJSON();
 
 var noOfDeployments = conf.deployments.length;
 var defaultDeployment, domainIndex, target;
-var maximumRandomNumber = 1000;
-var cookieName = conf.cookie_name;
+Robin.prototype.maximumRandomNumber = 1000;
+
 var cookies, receivedValue, cookieValue;
 
 var addresses = initAddresses();
@@ -20,12 +20,11 @@ var robin = new Robin();
 
 var server = httpProxy.createServer(function (req, res, proxy) {
     cookies = new Cookies(req, res);
-    receivedValue = cookies.get(cookieName);
-
+    receivedValue = cookies.get(robin.cookieName);
     if (receivedValue == undefined) {
         target = robin.matchProxy(res);
         cookieValue = labels[domainIndex];
-        cookies.set(cookieName,cookieValue, {expires: expiryTime}, {domain: req.headers.host});
+        cookies.set(robin.cookieName,cookieValue, {expires: expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
@@ -35,6 +34,7 @@ var server = httpProxy.createServer(function (req, res, proxy) {
 }).listen(pport);
 
 function Robin() {
+    this.cookieName = conf.cookie_name;
 }
 
 Robin.prototype.matchProxy = function (res) {
@@ -62,7 +62,7 @@ Robin.prototype.findDeployment = function (depLabel) {
 }
 
 Robin.prototype.generateRandomNumber = function () {
-    var randomNumber = Math.floor(Math.random()*(maximumRandomNumber+1));
+    var randomNumber = Math.floor(Math.random()*(this.maximumRandomNumber+1));
     return randomNumber;
 }
 
