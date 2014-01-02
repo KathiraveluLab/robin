@@ -17,7 +17,6 @@ function Robin() {
     this.receivedValue;
     this.cookieValue;
     this.addresses = this.initDeployments();
-    this.pport = this.initProxyPort();
     this.expiryTime = this.setExpiryTime();
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
@@ -59,7 +58,7 @@ Robin.prototype.labelDeployments = function () {
     return labelledDeployments;
 }
 
-Robin.prototype.initProxyPort = function () {
+Robin.prototype.getProxyPort = function () {
     var defaultPort = 80;
     return this.conf.proxy_port || defaultPort; // "proxy_port" is optional in config.json.
 }
@@ -75,7 +74,7 @@ var robin = new Robin();
 
 var server = httpProxy.createServer(function (req, res, proxy) {
     robin.createServer(req, res, proxy);
-}).listen(robin.pport);
+}).listen(robin.getProxyPort());
 
 Robin.prototype.createServer = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
