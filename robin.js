@@ -20,9 +20,10 @@ function Robin() {
     this.pport = this.initProxyPort();
     this.expiryTime = this.setExpiryTime();
     this.labels = this.initLabels();
+    this.labelledDeployments = this.labelDeployments();
     this.defaultDeployment; 
     this.domainIndex;
-    this.target;
+    this.target = this.defaultDeployment;
 }
 
 Robin.prototype.initDeployments = function () {
@@ -46,6 +47,16 @@ Robin.prototype.initLabels = function () {
         deploymentLabels[i] = this.conf.deployments[i].label;
     }
     return deploymentLabels;
+}
+
+Robin.prototype.labelDeployments = function () {
+    labelledDeployments = new Array(); 
+    var deploymentLabels = [];
+    for (var i = 0; i < this.noOfDeployments; i ++) {
+        deploymentLabels[i] = this.conf.deployments[i].label;
+        labelledDeployments[deploymentLabels[i]] = this.addresses[i];
+    }
+    return labelledDeployments;
 }
 
 Robin.prototype.initProxyPort = function () {
@@ -76,7 +87,7 @@ Robin.prototype.createServer = function (req, res, proxy) {
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
-        this.target = this.findDeployment(this.receivedValue);
+        this.target = this.labelledDeployments[this.receivedValue];
      }
     proxy.proxyRequest(req, res, this.target);
 }
@@ -92,15 +103,6 @@ Robin.prototype.matchProxy = function (res) {
         } else {
             randomnumber = randomnumber - depWeight;
         }
-    }
-    return this.defaultDeployment;
-}
-
-Robin.prototype.findDeployment = function (depLabel) {
-    for (var i = 0; i < this.noOfDeployments; i++) {
-        if (depLabel == this.labels[i]) {
-            return this.addresses[i];
-        } 
     }
     return this.defaultDeployment;
 }
