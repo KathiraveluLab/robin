@@ -16,7 +16,7 @@ function Robin() {
     this.cookies = new Cookies();
     this.receivedValue = null;
     this.cookieValue = null;
-    this.addresses = this.initDeployments();
+    this.deployments = this.initDeployments();
     this.expiryTime = this.setExpiryTime();
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
@@ -26,36 +26,34 @@ function Robin() {
 }
 
 Robin.prototype.initDeployments = function () {
-    var deployments = [];
+    this.deployments = [];
     for (var i = 0; i < this.noOfDeployments; i ++) {
-        deployments[i] = {
+        this.deployments[i] = {
             host: this.conf.deployments[i].addr,
             port: this.conf.deployments[i].port
         };
         if (this.conf.deployments[i].addr == this.conf.default_deployment) {
             this.domainIndex = i;
-            this.defaultDeployment = deployments[i];
+            this.defaultDeployment = this.deployments[i];
         }
     }
-    return deployments;
+    return this.deployments;
 }
 
 Robin.prototype.initLabels = function () {
-    var deploymentLabels = [];
+    this.labels = [];
     for (var i = 0; i < this.noOfDeployments; i ++) {
-        deploymentLabels[i] = this.conf.deployments[i].label;
+        this.labels[i] = this.conf.deployments[i].label;
     }
-    return deploymentLabels;
+    return this.labels;
 }
 
 Robin.prototype.labelDeployments = function () {
-    labelledDeployments = new Array(); 
-    var deploymentLabels = [];
+    this.labelledDeployments = new Array(); 
     for (var i = 0; i < this.noOfDeployments; i ++) {
-        deploymentLabels[i] = this.conf.deployments[i].label;
-        labelledDeployments[deploymentLabels[i]] = this.addresses[i];
+        this.labelledDeployments[this.labels[i]] = this.deployments[i];
     }
-    return labelledDeployments;
+    return this.labelledDeployments;
 }
 
 Robin.prototype.getProxyPort = function () {
@@ -98,7 +96,7 @@ Robin.prototype.matchProxy = function (res) {
         depWeight = this.conf.deployments[i].weight;
         if (randomnumber < depWeight) {
             this.domainIndex = i;
-            return this.addresses[i];
+            return this.deployments[i];
         } else {
             randomnumber = randomnumber - depWeight;
         }
