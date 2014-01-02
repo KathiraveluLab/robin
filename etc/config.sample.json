@@ -3,6 +3,7 @@
   "expires": "2592000000",
   "default_deployment": "www.uniplaces.com",
   "proxy_port": "8000",
+  "max_weight": "1000",
 
   "deployments": [
   {

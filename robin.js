@@ -2,7 +2,7 @@ var httpProxy = require('http-proxy/lib/node-http-proxy'),
     etc = require('etc'),
     Cookies = require('cookies');
 
-Robin.prototype.maximumRandomNumber = 1000;
+Robin.prototype.maximumWeight = 1000;
 
 function Robin() {
     if (arguments.callee._singletonInstance)
@@ -105,6 +105,8 @@ Robin.prototype.matchProxy = function (res) {
 }
 
 Robin.prototype.generateRandomNumber = function () {
-    var randomNumber = Math.floor(Math.random()*(this.maximumRandomNumber+1));
+    var randomNumber = 
+        Math.ceil(Math.random()*(this.conf.max_weight || this.maximumWeight)); 
+        // "max_weight" is optional in config.json.
     return randomNumber;
 }
