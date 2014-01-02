@@ -63,19 +63,23 @@ Robin.prototype.setExpiryTime = function () {
 var robin = new Robin();
 
 var server = httpProxy.createServer(function (req, res, proxy) {
-    robin.cookies = new Cookies(req, res);
-    robin.receivedValue = robin.cookies.get(robin.cookieName);
-    if (robin.receivedValue == undefined) {
-        robin.target = robin.matchProxy(res);
-        robin.cookieValue = robin.labels[robin.domainIndex];
-        robin.cookies.set(robin.cookieName,robin.cookieValue, {expires: robin.expiryTime}, {domain: req.headers.host});
+    robin.createServer(req, res, proxy);
+}).listen(robin.pport);
+
+Robin.prototype.createServer = function (req, res, proxy) {
+    this.cookies = new Cookies(req, res);
+    this.receivedValue = this.cookies.get(this.cookieName);
+    if (this.receivedValue == undefined) {
+        this.target = this.matchProxy(res);
+        this.cookieValue = this.labels[this.domainIndex];
+        this.cookies.set(this.cookieName,this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
-        robin.target = robin.findDeployment(robin.receivedValue);
+        this.target = this.findDeployment(this.receivedValue);
      }
-    proxy.proxyRequest(req, res, robin.target);
-}).listen(robin.pport);
+    proxy.proxyRequest(req, res, this.target);
+}
 
 Robin.prototype.matchProxy = function (res) {
     var randomnumber= this.generateRandomNumber();
