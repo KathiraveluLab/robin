@@ -13,15 +13,15 @@ function Robin() {
     this.conf = this.configObject.toJSON();
     this.noOfDeployments = this.conf.deployments.length;
     this.cookieName = this.conf.cookie_name;
-    this.cookies;
-    this.receivedValue;
-    this.cookieValue;
+    this.cookies = new Cookies();
+    this.receivedValue = null;
+    this.cookieValue = null;
     this.addresses = this.initDeployments();
     this.expiryTime = this.setExpiryTime();
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
-    this.defaultDeployment; 
-    this.domainIndex;
+    this.defaultDeployment = null; 
+    this.domainIndex = 0;
     this.target = this.defaultDeployment;
 }
 
@@ -79,7 +79,7 @@ var server = httpProxy.createServer(function (req, res, proxy) {
 Robin.prototype.createServer = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
     this.receivedValue = this.cookies.get(this.cookieName);
-    if (this.receivedValue == undefined) {
+    if (this.receivedValue === undefined) {
         this.target = this.matchProxy(res);
         this.cookieValue = this.labels[this.domainIndex];
         this.cookies.set(this.cookieName,this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
