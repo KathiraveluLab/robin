@@ -80,7 +80,7 @@ Robin.prototype.createServer = function (req, res, proxy) {
     if (this.receivedValue === undefined) {
         this.target = this.matchProxy(res);
         this.cookieValue = this.labels[this.domainIndex];
-        this.cookies.set(this.cookieName,this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+        this.cookies.set(this.cookieName, this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } )
         return res.end();
      } else {        
