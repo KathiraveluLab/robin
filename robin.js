@@ -3,6 +3,7 @@ var httpProxy = require('http-proxy/lib/node-http-proxy'),
     Cookies = require('cookies');
 
 Robin.prototype.maximumWeight = 1000;
+Robin.prototype.defaultPort = 80;
 
 function Robin() {
     if (arguments.callee._singletonInstance)
@@ -57,8 +58,7 @@ Robin.prototype.labelDeployments = function () {
 }
 
 Robin.prototype.getProxyPort = function () {
-    var defaultPort = 80;
-    return this.conf.proxy_port || defaultPort; // "proxy_port" is optional in config.json.
+    return this.conf.proxy_port || this.defaultPort; // "proxy_port" is optional in config.json.
 }
 
 Robin.prototype.setExpiryTime = function () {
