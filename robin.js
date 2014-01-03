@@ -27,7 +27,7 @@ function Robin() {
 
 Robin.prototype.initDeployments = function () {
     this.deployments = [];
-    for (var i = 0; i < this.noOfDeployments; i ++) {
+    for (var i = 0; i < this.noOfDeployments; i++) {
         this.deployments[i] = {
             host: this.conf.deployments[i].addr,
             port: this.conf.deployments[i].port
@@ -42,7 +42,7 @@ Robin.prototype.initDeployments = function () {
 
 Robin.prototype.initLabels = function () {
     this.labels = [];
-    for (var i = 0; i < this.noOfDeployments; i ++) {
+    for (var i = 0; i < this.noOfDeployments; i++) {
         this.labels[i] = this.conf.deployments[i].label;
     }
     return this.labels;
@@ -50,7 +50,7 @@ Robin.prototype.initLabels = function () {
 
 Robin.prototype.labelDeployments = function () {
     this.labelledDeployments = new Array(); 
-    for (var i = 0; i < this.noOfDeployments; i ++) {
+    for (var i = 0; i < this.noOfDeployments; i++) {
         this.labelledDeployments[this.labels[i]] = this.deployments[i];
     }
     return this.labelledDeployments;
