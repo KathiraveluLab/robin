@@ -77,7 +77,7 @@ var server = httpProxy.createServer(function (req, res, proxy) {
 Robin.prototype.createServer = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
     this.receivedValue = this.cookies.get(this.cookieName);
-    if (this.receivedValue === undefined) {
+    if (typeof this.receivedValue == 'undefined') {
         this.target = this.matchProxy(res);
         this.cookieValue = this.labels[this.domainIndex];
         this.cookies.set(this.cookieName, this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
