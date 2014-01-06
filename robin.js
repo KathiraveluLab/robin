@@ -68,7 +68,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
     this.receivedValue = this.cookies.get(this.cookieName);
     if (typeof this.receivedValue == 'undefined') {
-        this.target = this.matchProxy(res);
+        this.target = this.matchDeployment();
         this.cookieValue = this.labels[this.domainIndex];
         this.cookies.set(this.cookieName, this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } )
@@ -79,7 +79,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
     proxy.proxyRequest(req, res, this.target);
 }
 
-Robin.prototype.matchProxy = function (res) {
+Robin.prototype.matchDeployment = function () {
     var randomnumber= this.generateRandomNumber();
     var depWeight;
     for (var i = 0; i < this.noOfDeployments; i++) {
