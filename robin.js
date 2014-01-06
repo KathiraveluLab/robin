@@ -68,13 +68,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
     if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
         this.proxyRequestFirstTime(req, res, proxy);
     } else { //cookie found in the request
-        var target;
-        if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
-            target = this.labelledDeployments[receivedValue];
-        } else { // no valid cookie found in the request
-            target = this.defaultDeployment;           
-        }
-        proxy.proxyRequest(req, res, target);
+        this.proxySubsequentRequests(req, res, proxy, receivedValue);
     }    
 }
 
@@ -88,6 +82,16 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
     res.writeHead( 302, { "Location": req.url } );
     return res.end();
+}
+
+Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentIndex) {
+    var target;
+    if (typeof this.labelledDeployments[deploymentIndex] != 'undefined') { //valid cookie in the request
+        target = this.labelledDeployments[deploymentIndex];
+    } else { // no valid cookie found in the request
+        target = this.defaultDeployment;           
+    }
+    proxy.proxyRequest(req, res, target); 
 }
 
 Robin.prototype.findDeployment = function (maxWeight) {
