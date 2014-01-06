@@ -6,8 +6,8 @@ Robin.prototype.maximumWeight = 1000;
 Robin.prototype.defaultPort = 80;
 
 function Robin() {
-    this.configObject = etc().argv().env().etc();
-    this.conf = this.configObject.toJSON();
+    var configObject = etc().argv().env().etc();
+    this.conf = configObject.toJSON();
     this.noOfDeployments = this.conf.deployments.length;
     this.cookieName = this.conf.cookie_name;
     this.deployments = this.initDeployments();
@@ -70,11 +70,11 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
         target = this.labelledDeployments[receivedValue];
         proxy.proxyRequest(req, res, target);
      } else { // no valid cookie found in the request
-        this.setCookie(req, res, proxy);
+        this.proxyRequestFirstTime(req, res, proxy);
      }    
 }
 
-Robin.prototype.setCookie = function (req, res, proxy) {
+Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
     var deploymentIndex, target;
