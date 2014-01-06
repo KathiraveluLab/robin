@@ -93,7 +93,6 @@ Robin.prototype.setCookie = function (req, res, proxy) {
     cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
     res.writeHead( 302, { "Location": req.url } );
     return res.end();
-    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.findDeployment = function () {
