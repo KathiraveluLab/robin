@@ -68,12 +68,6 @@ Robin.prototype.setExpiryTime = function () {
     return expiryTime;
 }
 
-var robin = new Robin();
-
-var server = httpProxy.createServer(function (req, res, proxy) {
-    robin.createServer(req, res, proxy);
-}).listen(robin.getProxyPort());
-
 Robin.prototype.createServer = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
     this.receivedValue = this.cookies.get(this.cookieName);
@@ -110,3 +104,5 @@ Robin.prototype.generateRandomNumber = function () {
         // "max_weight" is optional in config.json.
     return randomNumber;
 }
+
+module.exports = Robin;
