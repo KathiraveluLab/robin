@@ -43,7 +43,7 @@ Robin.prototype.initLabels = function () {
 }
 
 Robin.prototype.labelDeployments = function () {
-    this.labelledDeployments = []; 
+    this.labelledDeployments = {}; 
     for (var i = 0; i < this.noOfDeployments; i++) {
         this.labelledDeployments[this.labels[i]] = this.deployments[i];
     }
@@ -81,7 +81,9 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
 
     if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
-        deploymentIndex = this.findDeployment(); // Find a deployment
+        var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
+        deploymentIndex = this.findDeployment(maxWeight); 
+        // Find a deployment
         target = this.deployments[deploymentIndex];
      }  
      else { // A cookie exists in the request, but doesn't match any of the labels.
@@ -95,8 +97,8 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     return res.end();
 }
 
-Robin.prototype.findDeployment = function () {
-    var randomnumber= this.generateRandomNumber();
+Robin.prototype.findDeployment = function (maxWeight) {
+    var randomnumber= this.generateRandomNumber(maxWeight);
     var depWeight;
     for (var i = 0; i < this.noOfDeployments; i++) {
         depWeight = this.conf.deployments[i].weight;
@@ -109,10 +111,9 @@ Robin.prototype.findDeployment = function () {
     return this.defaultDeploymentIndex;
 }
 
-Robin.prototype.generateRandomNumber = function () {
+Robin.prototype.generateRandomNumber = function (maxWeight) {
     var randomNumber = 
-        Math.ceil( Math.random() * (this.conf.max_weight || this.maximumWeight) ); 
-        // "max_weight" is optional in config.json.
+        Math.ceil( Math.random() * maxWeight );   
     return randomNumber;
 }
 
