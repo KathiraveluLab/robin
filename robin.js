@@ -70,7 +70,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
         target = this.matchDeployment();
         var cookieValue = this.labels[this.domainIndex];
         cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-        res.writeHead( 302, { "Location": "/" } );
+        res.writeHead( 302, { "Location": req.url } );
         return res.end();
      } else {        
         target = this.labelledDeployments[receivedValue];
@@ -95,7 +95,7 @@ Robin.prototype.matchDeployment = function () {
 
 Robin.prototype.generateRandomNumber = function () {
     var randomNumber = 
-        Math.ceil(Math.random()*(this.conf.max_weight || this.maximumWeight)); 
+        Math.ceil( Math.random() * (this.conf.max_weight || this.maximumWeight) ); 
         // "max_weight" is optional in config.json.
     return randomNumber;
 }
