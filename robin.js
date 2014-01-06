@@ -62,22 +62,38 @@ Robin.prototype.getExpiryTime = function () {
 }
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
-    var target, deploymentIndex;
+    var target;
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
 
-    if (typeof receivedValue == 'undefined') {
-        deploymentIndex = this.findDeployment();
-        target = this.deployments[deploymentIndex];
-        this.setCookie(req, res, proxy, deploymentIndex);
-     } else if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
+    if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
         target = this.labelledDeployments[receivedValue];
         proxy.proxyRequest(req, res, target);
-     } else { // If the cookie doesn't match any of the labels.
-        deploymentIndex = this.defaultDeploymentIndex;
+     } else { // no valid cookie found in the request
+        this.setCookie(req, res, proxy);
+     }    
+}
+
+Robin.prototype.setCookie = function (req, res, proxy) {
+    var cookies = new Cookies(req, res);
+    var receivedValue = cookies.get(this.cookieName);
+    var deploymentIndex, target;
+    var cookies = new Cookies(req, res);
+
+    if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
+        deploymentIndex = this.findDeployment(); // Find a deployment
+        target = this.deployments[deploymentIndex];
+     }  
+     else { // A cookie exists in the request, but doesn't match any of the labels.
+        deploymentIndex = this.defaultDeploymentIndex; // Match the default deployment.
         target = this.defaultDeployment;
-        this.setCookie(req, res, proxy, deploymentIndex);
      }
+
+    var cookieValue = this.labels[deploymentIndex];
+    cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+    res.writeHead( 302, { "Location": req.url } );
+    return res.end();
+    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.findDeployment = function () {
@@ -92,15 +108,6 @@ Robin.prototype.findDeployment = function () {
         }
     }
     return this.defaultDeploymentIndex;
-}
-
-Robin.prototype.setCookie = function (req, res, proxy, deploymentIndex) {
-    var cookies = new Cookies(req, res);
-    var cookieValue = this.labels[deploymentIndex];
-    cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-    res.writeHead( 302, { "Location": req.url } );
-    return res.end();
-    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.generateRandomNumber = function () {
