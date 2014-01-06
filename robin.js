@@ -64,7 +64,7 @@ Robin.prototype.setExpiryTime = function () {
     return expiryTime;
 }
 
-Robin.prototype.createServer = function (req, res, proxy) {
+Robin.prototype.proxyRequests = function (req, res, proxy) {
     this.cookies = new Cookies(req, res);
     this.receivedValue = this.cookies.get(this.cookieName);
     if (typeof this.receivedValue == 'undefined') {
