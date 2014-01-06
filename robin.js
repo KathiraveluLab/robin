@@ -62,34 +62,27 @@ Robin.prototype.getExpiryTime = function () {
 }
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
-    var target;
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
 
-    if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
-        target = this.labelledDeployments[receivedValue];
-        proxy.proxyRequest(req, res, target);
-     } else { // no valid cookie found in the request
+    if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
         this.proxyRequestFirstTime(req, res, proxy);
-     }    
+    } else { //cookie found in the request
+        var target;
+        if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
+            target = this.labelledDeployments[receivedValue];
+        } else { // no valid cookie found in the request
+            target = this.defaultDeployment;           
+        }
+        proxy.proxyRequest(req, res, target);
+    }    
 }
 
 Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
-    var receivedValue = cookies.get(this.cookieName);
-    var deploymentIndex, target;
-    var cookies = new Cookies(req, res);
-
-    if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
-        var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
-        deploymentIndex = this.findDeployment(maxWeight); 
-        // Find a deployment
-        target = this.deployments[deploymentIndex];
-     }  
-     else { // A cookie exists in the request, but doesn't match any of the labels.
-        deploymentIndex = this.defaultDeploymentIndex; // Match the default deployment.
-        target = this.defaultDeployment;
-     }
+    var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
+    var deploymentIndex = this.findDeployment(maxWeight);  
+    target = this.deployments[deploymentIndex];
 
     var cookieValue = this.labels[deploymentIndex];
     cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
