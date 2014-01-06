@@ -14,7 +14,7 @@ function Robin() {
     this.receivedValue = null;
     this.cookieValue = null;
     this.deployments = this.initDeployments();
-    this.expiryTime = this.setExpiryTime();
+    this.expiryTime = this.getExpiryTime();
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
     this.defaultDeployment = null; 
@@ -57,7 +57,7 @@ Robin.prototype.getProxyPort = function () {
     return this.conf.proxy_port || this.defaultPort; // "proxy_port" is optional in config.json.
 }
 
-Robin.prototype.setExpiryTime = function () {
+Robin.prototype.getExpiryTime = function () {
     var currentTimeInMillis = new Date().getTime();
     var expires = parseInt(this.conf.expires);
     var expiryTime = new Date(currentTimeInMillis + expires);
