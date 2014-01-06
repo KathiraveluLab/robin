@@ -62,28 +62,22 @@ Robin.prototype.getExpiryTime = function () {
 }
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
+    var target, deploymentIndex;
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
-    var target, deploymentIndex;
 
     if (typeof receivedValue == 'undefined') {
-        deploymentIndex = findDeployment();
+        deploymentIndex = this.findDeployment();
         target = this.deployments[deploymentIndex];
-        var cookieValue = this.labels[deploymentIndex];
-        cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-        res.writeHead( 302, { "Location": req.url } );
-        return res.end();
+        this.setCookie(req, res, proxy, deploymentIndex);
      } else if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
         target = this.labelledDeployments[receivedValue];
-     } else { //default case. If the cookie doesn't match any of the labels.
+        proxy.proxyRequest(req, res, target);
+     } else { // If the cookie doesn't match any of the labels.
         deploymentIndex = this.defaultDeploymentIndex;
         target = this.defaultDeployment;
-        var cookieValue = this.labels[this.defaultDeploymentIndex];
-        cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-        res.writeHead( 302, { "Location": req.url } );
-        return res.end();
+        this.setCookie(req, res, proxy, deploymentIndex);
      }
-    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.findDeployment = function () {
@@ -98,6 +92,15 @@ Robin.prototype.findDeployment = function () {
         }
     }
     return this.defaultDeploymentIndex;
+}
+
+Robin.prototype.setCookie = function (req, res, proxy, deploymentIndex) {
+    var cookies = new Cookies(req, res);
+    var cookieValue = this.labels[deploymentIndex];
+    cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+    res.writeHead( 302, { "Location": req.url } );
+    return res.end();
+    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.generateRandomNumber = function () {
