@@ -6,10 +6,6 @@ Robin.prototype.maximumWeight = 1000;
 Robin.prototype.defaultPort = 80;
 
 function Robin() {
-    if (arguments.callee._singletonInstance)
-        return arguments.callee._singletonInstance;
-    arguments.callee._singletonInstance = this;
-
     this.configObject = etc().argv().env().etc();
     this.conf = this.configObject.toJSON();
     this.noOfDeployments = this.conf.deployments.length;
