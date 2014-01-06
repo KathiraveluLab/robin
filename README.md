@@ -58,7 +58,7 @@ Sample can be found at etc/config.sample.json.
 
 ### To run
 From the robin root directory
-node robin
+./Robin
 
 To be able to bind port 80 to the proxy
 sudo setcap 'cap_net_bind_service=+ep' path_to_node
