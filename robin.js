@@ -10,8 +10,6 @@ function Robin() {
     this.conf = this.configObject.toJSON();
     this.noOfDeployments = this.conf.deployments.length;
     this.cookieName = this.conf.cookie_name;
-    this.receivedValue = null;
-    this.cookieValue = null;
     this.deployments = this.initDeployments();
     this.expiryTime = this.getExpiryTime();
     this.labels = this.initLabels();
@@ -65,15 +63,15 @@ Robin.prototype.getExpiryTime = function () {
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
-    this.receivedValue = cookies.get(this.cookieName);
-    if (typeof this.receivedValue == 'undefined') {
+    var receivedValue = cookies.get(this.cookieName);
+    if (typeof receivedValue == 'undefined') {
         this.target = this.matchDeployment();
-        this.cookieValue = this.labels[this.domainIndex];
-        cookies.set(this.cookieName, this.cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-        res.writeHead( 302, { "Location": "/" } )
+        var cookieValue = this.labels[this.domainIndex];
+        cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+        res.writeHead( 302, { "Location": "/" } );
         return res.end();
      } else {        
-        this.target = this.labelledDeployments[this.receivedValue];
+        this.target = this.labelledDeployments[receivedValue];
      }
     proxy.proxyRequest(req, res, this.target);
 }
