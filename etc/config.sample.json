@@ -2,6 +2,7 @@
   "cookie_name": "uniplaces",
   "expires": "2592000000",
   "default_deployment": "www.uniplaces.com",
+  "default_deployment_port": "80",
   "proxy_port": "8000",
   "max_weight": "1000",
 

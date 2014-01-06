@@ -25,7 +25,8 @@ Robin.prototype.initDeployments = function () {
             host: this.conf.deployments[i].addr,
             port: this.conf.deployments[i].port
         };
-        if (this.conf.deployments[i].addr == this.conf.default_deployment) {
+        if ((this.conf.deployments[i].addr == this.conf.default_deployment) && 
+            (this.conf.deployments[i].port == this.conf.default_deployment_port)) {
             this.domainIndex = i;
             this.defaultDeployment = this.deployments[i];
         }
