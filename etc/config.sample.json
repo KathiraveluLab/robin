@@ -6,17 +6,17 @@
   "max_weight": "1000",
 
   "deployments": [
-  {
-    "label": "A",
-    "weight": "600",
-    "addr": "www.uniplaces.com",
-    "port": "80"
-  },
-  {
-    "label": "B",
-    "weight": "400",
-    "addr": "www.uniplaces.pt",
-    "port": "80"
-  }
+    {
+      "label": "A",
+      "weight": "600",
+      "addr": "www.uniplaces.com",
+      "port": "80"
+    },
+    {
+      "label": "B",
+      "weight": "400",
+      "addr": "www.uniplaces.pt",
+      "port": "80"
+    }
   ]
 }
