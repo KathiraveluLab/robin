@@ -15,7 +15,7 @@ function Robin() {
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
     this.defaultDeployment = null; 
-    this.domainIndex = 0;
+    this.defaultDeploymentIndex = 0;
 }
 
 Robin.prototype.initDeployments = function () {
@@ -27,7 +27,7 @@ Robin.prototype.initDeployments = function () {
         };
         if ((this.conf.deployments[i].addr == this.conf.default_deployment) && 
             (this.conf.deployments[i].port == this.conf.default_deployment_port)) {
-            this.domainIndex = i;
+            this.defaultDeploymentIndex = i;
             this.defaultDeployment = this.deployments[i];
         }
     }
@@ -64,33 +64,40 @@ Robin.prototype.getExpiryTime = function () {
 Robin.prototype.proxyRequests = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
-    var target = this.defaultDeployment;
+    var target, deploymentIndex;
 
     if (typeof receivedValue == 'undefined') {
-        target = this.matchDeployment();
-        var cookieValue = this.labels[this.domainIndex];
+        deploymentIndex = findDeployment();
+        target = this.deployments[deploymentIndex];
+        var cookieValue = this.labels[deploymentIndex];
         cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": req.url } );
         return res.end();
-     } else {        
+     } else if (typeof this.labelledDeployments[receivedValue] != 'undefined') { //valid cookie in the request
         target = this.labelledDeployments[receivedValue];
+     } else { //default case. If the cookie doesn't match any of the labels.
+        deploymentIndex = this.defaultDeploymentIndex;
+        target = this.defaultDeployment;
+        var cookieValue = this.labels[this.defaultDeploymentIndex];
+        cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+        res.writeHead( 302, { "Location": req.url } );
+        return res.end();
      }
     proxy.proxyRequest(req, res, target);
 }
 
-Robin.prototype.matchDeployment = function () {
+Robin.prototype.findDeployment = function () {
     var randomnumber= this.generateRandomNumber();
     var depWeight;
     for (var i = 0; i < this.noOfDeployments; i++) {
         depWeight = this.conf.deployments[i].weight;
         if (randomnumber < depWeight) {
-            this.domainIndex = i;
-            return this.deployments[i];
+            return i;
         } else {
             randomnumber = randomnumber - depWeight;
         }
     }
-    return this.defaultDeployment;
+    return this.defaultDeploymentIndex;
 }
 
 Robin.prototype.generateRandomNumber = function () {
