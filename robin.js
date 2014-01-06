@@ -16,7 +16,6 @@ function Robin() {
     this.labelledDeployments = this.labelDeployments();
     this.defaultDeployment = null; 
     this.domainIndex = 0;
-    this.target = this.defaultDeployment;
 }
 
 Robin.prototype.initDeployments = function () {
@@ -43,7 +42,7 @@ Robin.prototype.initLabels = function () {
 }
 
 Robin.prototype.labelDeployments = function () {
-    this.labelledDeployments = new Array(); 
+    this.labelledDeployments = []; 
     for (var i = 0; i < this.noOfDeployments; i++) {
         this.labelledDeployments[this.labels[i]] = this.deployments[i];
     }
@@ -64,16 +63,18 @@ Robin.prototype.getExpiryTime = function () {
 Robin.prototype.proxyRequests = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var receivedValue = cookies.get(this.cookieName);
+    var target = this.defaultDeployment;
+
     if (typeof receivedValue == 'undefined') {
-        this.target = this.matchDeployment();
+        target = this.matchDeployment();
         var cookieValue = this.labels[this.domainIndex];
         cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
         res.writeHead( 302, { "Location": "/" } );
         return res.end();
      } else {        
-        this.target = this.labelledDeployments[receivedValue];
+        target = this.labelledDeployments[receivedValue];
      }
-    proxy.proxyRequest(req, res, this.target);
+    proxy.proxyRequest(req, res, target);
 }
 
 Robin.prototype.matchDeployment = function () {
