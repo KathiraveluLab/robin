@@ -8,14 +8,14 @@ Robin.prototype.defaultPort = 80;
 function Robin() {
     var configObject = etc().argv().env().etc();
     this.conf = configObject.toJSON();
-    this.noOfDeployments = this.conf.deployments.length;
-    this.cookieName = this.conf.cookie_name;
-    this.deployments = this.initDeployments();
-    this.expiryTime = this.getExpiryTime();
-    this.labels = this.initLabels();
-    this.labelledDeployments = this.labelDeployments();
     this.defaultDeployment = null; 
     this.defaultDeploymentIndex = 0;
+    this.noOfDeployments = this.conf.deployments.length;
+    this.deployments = this.initDeployments();
+    this.labels = this.initLabels();
+    this.labelledDeployments = this.labelDeployments();
+    this.cookieName = this.conf.cookie_name;
+    this.expiryTime = this.getExpiryTime();
 }
 
 Robin.prototype.initDeployments = function () {
@@ -80,7 +80,7 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
 
     var cookieValue = this.labels[deploymentIndex];
     cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-    res.writeHead( 302, { "Location": req.url } );
+    res.writeHead(200);
     return res.end();
 }
 
@@ -89,7 +89,7 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentI
     if (typeof this.labelledDeployments[deploymentIndex] != 'undefined') { //valid cookie in the request
         target = this.labelledDeployments[deploymentIndex];
     } else { // no valid cookie found in the request
-        target = this.defaultDeployment;           
+        target = this.defaultDeployment;     
     }
     proxy.proxyRequest(req, res, target); 
 }
