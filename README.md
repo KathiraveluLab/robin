@@ -16,8 +16,10 @@ will be used to serve the same user till the cookie expires.
 │   │   └── config.sample.json
 │   ├── LICENSE
 │   ├── package.json
+│   ├── README.md
+│   ├── Robin
 │   ├── robin.js
-│   └── README.md
+│   └── robinInit.js
 
 
 ### Installing Node and npm
