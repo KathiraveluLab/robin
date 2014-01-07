@@ -9,7 +9,7 @@
     "url": "https://github.com/uniplaces/robin.git"
   },
   "dependencies": {
-    "http-proxy": ">= 0.10.3",
+    "http-proxy": ">= 0.10.4",
     "etc": ">= 0.4.0",
     "cookies": ">= 0.3.6"
   }
