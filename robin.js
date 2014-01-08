@@ -7,7 +7,7 @@ Robin.prototype.defaultPort = 80;
 function Robin(conf) {
     this.conf = conf;
     this.defaultDeploymentIndex = this.getDefaultDeploymentIndex(); 
-    this.labelledDeployments = this.labelDeployments();
+    this.labelledDeployments = this.labelDeployments(); 
 }
 
 Robin.prototype.getDefaultDeploymentIndex = function () {
@@ -69,10 +69,10 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     proxy.proxyRequest(req, res, target); 
 }
 
-Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentIndex) {
+Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentLabel) {
     var target;
-    if (typeof this.labelledDeployments[deploymentIndex] != 'undefined') { //valid cookie in the request
-        target = this.labelledDeployments[deploymentIndex];
+    if (typeof this.labelledDeployments[deploymentLabel] != 'undefined') { //valid cookie in the request
+        target = this.labelledDeployments[deploymentLabel];
     } else { // no valid cookie found in the request
         target = this.conf.deployments[this.defaultDeploymentIndex];
     }
