@@ -33,12 +33,12 @@ Robin.prototype.getExpiryTime = function () {
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
-    var receivedValue = cookies.get(this.conf.cookie_name);
+    var receivedCookieValue = cookies.get(this.conf.cookie_name);
 
-    if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
+    if (typeof receivedCookieValue == 'undefined') { // No cookie in the request. Initial request.
         this.proxyRequestFirstTime(req, res, proxy);
     } else { //cookie found in the request
-        this.proxySubsequentRequests(req, res, proxy, receivedValue);
+        this.proxySubsequentRequests(req, res, proxy, receivedCookieValue);
     }    
 }
 
