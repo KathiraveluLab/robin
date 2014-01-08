@@ -76,7 +76,6 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     
     res.writeHead = function(statusCode, headers) {
         cookies.set(cookieName, cookieValue, {expires: expiryTime}, {domain: req.headers.host});
-        var contentType = res.getHeader('content-type');
         res.setHeader('content-type', 'text/html');
         res.oldWriteHead(statusCode, headers);
     }
