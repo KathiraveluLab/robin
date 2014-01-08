@@ -6,17 +6,15 @@ Robin.prototype.defaultPort = 80;
 
 function Robin(conf) {
     this.conf = conf;
-    this.noOfDeployments = this.conf.deployments.length;
     this.defaultDeploymentIndex = 0;
     this.defaultDeployment = this.initDefaultDeployment(); 
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
-    this.cookieName = this.conf.cookie_name;
     this.expiryTime = this.getExpiryTime();
 }
 
 Robin.prototype.initDefaultDeployment = function () {
-    for (var i = 0; i < this.noOfDeployments; i++) {
+    for (var i = 0; i < this.conf.deployments.length; i++) {
         if ((this.conf.deployments[i].addr == this.conf.default_deployment) && 
             (this.conf.deployments[i].port == this.conf.default_deployment_port)) {
             this.defaultDeploymentIndex = i;
@@ -29,7 +27,7 @@ Robin.prototype.initDefaultDeployment = function () {
 
 Robin.prototype.initLabels = function () {
     this.labels = [];
-    for (var i = 0; i < this.noOfDeployments; i++) {
+    for (var i = 0; i < this.conf.deployments.length; i++) {
         this.labels[i] = this.conf.deployments[i].label;
     }
     return this.labels;
@@ -37,7 +35,7 @@ Robin.prototype.initLabels = function () {
 
 Robin.prototype.labelDeployments = function () {
     this.labelledDeployments = {}; 
-    for (var i = 0; i < this.noOfDeployments; i++) {
+    for (var i = 0; i < this.conf.deployments.length; i++) {
         this.labelledDeployments[this.labels[i]] = this.conf.deployments[i];
     }
     return this.labelledDeployments;
@@ -56,7 +54,7 @@ Robin.prototype.getExpiryTime = function () {
 
 Robin.prototype.proxyRequests = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
-    var receivedValue = cookies.get(this.cookieName);
+    var receivedValue = cookies.get(this.conf.cookie_name);
 
     if (typeof receivedValue == 'undefined') { // No cookie in the request. Initial request.
         this.proxyRequestFirstTime(req, res, proxy);
@@ -69,12 +67,19 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
     var deploymentIndex = this.generateDeploymentIndex(maxWeight);  
-    target = this.conf.deployments[deploymentIndex];
-
+    var target = this.conf.deployments[deploymentIndex];
+    var cookieName = this.conf.cookie_name;
     var cookieValue = this.labels[deploymentIndex];
-    cookies.set(this.cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
-    res.writeHead(200);
-    return res.end();
+
+    res.oldWriteHead = res.writeHead;
+    
+    res.writeHead = function(statusCode, headers) {
+        cookies.set(cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+        var contentType = res.getHeader('content-type');
+        res.setHeader('content-type', 'text/html');
+        res.oldWriteHead(statusCode, headers);
+    }
+    proxy.proxyRequest(req, res, target); 
 }
 
 Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentIndex) {
@@ -90,7 +95,7 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentI
 Robin.prototype.generateDeploymentIndex = function (maxWeight) {
     var randomNumber = this.generateRandomNumber(maxWeight);
     var depWeight;
-    for (var index = 0; index < this.noOfDeployments; index++) {
+    for (var index = 0; index < this.conf.deployments.length; index++) {
         depWeight = this.conf.deployments[index].weight;
         if (randomNumber < depWeight) {
             return index;
