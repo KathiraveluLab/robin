@@ -17,7 +17,6 @@ Robin.prototype.initDefaultDeployment = function () {
         if ((this.conf.deployments[i].host == this.conf.default_deployment) && 
             (this.conf.deployments[i].port == this.conf.default_deployment_port)) {
             this.defaultDeploymentIndex = i;
-            this.defaultDeployment = this.conf.deployments[i];
             return this.conf.deployments[i];
         }
     }
