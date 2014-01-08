@@ -51,7 +51,7 @@ Sample can be found at etc/config.sample.json.
   {
     "label": "A", <-- Label of the deployment->
     "weight": "600", <-- The sum of the weights should be 1000.-> 
-    "addr": "www.uniplaces.com",
+    "host": "www.uniplaces.com",
     "port": "80"
   },
   <-- ... -->
