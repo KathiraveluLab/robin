@@ -75,7 +75,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
 Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
-    var deploymentIndex = this.findDeployment(maxWeight);  
+    var deploymentIndex = this.generateDeploymentIndex(maxWeight);  
     target = this.deployments[deploymentIndex];
 
     var cookieValue = this.labels[deploymentIndex];
@@ -94,23 +94,22 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentI
     proxy.proxyRequest(req, res, target); 
 }
 
-Robin.prototype.findDeployment = function (maxWeight) {
-    var randomnumber= this.generateRandomNumber(maxWeight);
+Robin.prototype.generateDeploymentIndex = function (maxWeight) {
+    var randomNumber = this.generateRandomNumber(maxWeight);
     var depWeight;
-    for (var i = 0; i < this.noOfDeployments; i++) {
-        depWeight = this.conf.deployments[i].weight;
-        if (randomnumber < depWeight) {
-            return i;
+    for (var index = 0; index < this.noOfDeployments; index++) {
+        depWeight = this.conf.deployments[index].weight;
+        if (randomNumber < depWeight) {
+            return index;
         } else {
-            randomnumber = randomnumber - depWeight;
+            randomNumber = randomNumber - depWeight;
         }
     }
     return this.defaultDeploymentIndex;
 }
 
 Robin.prototype.generateRandomNumber = function (maxWeight) {
-    var randomNumber = 
-        Math.ceil( Math.random() * maxWeight );   
+    var randomNumber = Math.ceil( Math.random() * maxWeight );   
     return randomNumber;
 }
 
