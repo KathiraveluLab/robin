@@ -1,13 +1,11 @@
 var httpProxy = require('http-proxy/lib/node-http-proxy'),
-    etc = require('etc'),
     Cookies = require('cookies');
 
 Robin.prototype.maximumWeight = 1000;
 Robin.prototype.defaultPort = 80;
 
-function Robin() {
-    var configObject = etc().argv().env().etc();
-    this.conf = configObject.toJSON();
+function Robin(conf) {
+    this.conf = conf;
     this.noOfDeployments = this.conf.deployments.length;
     this.defaultDeploymentIndex = 0;
     this.defaultDeployment = this.initDefaultDeployment(); 
