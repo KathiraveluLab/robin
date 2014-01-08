@@ -10,7 +10,6 @@ function Robin(conf) {
     this.defaultDeployment = this.initDefaultDeployment(); 
     this.labels = this.initLabels();
     this.labelledDeployments = this.labelDeployments();
-    this.expiryTime = this.getExpiryTime();
 }
 
 Robin.prototype.initDefaultDeployment = function () {
@@ -68,13 +67,15 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
     var deploymentIndex = this.generateDeploymentIndex(maxWeight);  
     var target = this.conf.deployments[deploymentIndex];
+
     var cookieName = this.conf.cookie_name;
     var cookieValue = this.labels[deploymentIndex];
+    var expiryTime = this.getExpiryTime();
 
     res.oldWriteHead = res.writeHead;
     
     res.writeHead = function(statusCode, headers) {
-        cookies.set(cookieName, cookieValue, {expires: this.expiryTime}, {domain: req.headers.host});
+        cookies.set(cookieName, cookieValue, {expires: expiryTime}, {domain: req.headers.host});
         var contentType = res.getHeader('content-type');
         res.setHeader('content-type', 'text/html');
         res.oldWriteHead(statusCode, headers);
