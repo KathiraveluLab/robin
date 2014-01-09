@@ -10,11 +10,11 @@ function Robin(conf) {
 }
 
 Robin.prototype.getDefaultDeploymentLabel = function () {
-    for (var index in this.conf.deployments) {
-        if (this.conf.deployments.hasOwnProperty(index)) {
-            if (this.conf.deployments[index].host == this.conf.default_deployment && 
-                this.conf.deployments[index].port == this.conf.default_deployment_port) {
-                return index;
+    for (var label in this.conf.deployments) {
+        if (this.conf.deployments.hasOwnProperty(label)) {
+            if (this.conf.deployments[label].host == this.conf.default_deployment && 
+                this.conf.deployments[label].port == this.conf.default_deployment_port) {
+                return label;
             }    
         }
     }
@@ -74,11 +74,11 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentL
 Robin.prototype.generateDeploymentLabel = function (maxWeight) {
     var randomNumber = this.generateRandomNumber(maxWeight);
     var depWeight;
-    for (var index in this.conf.deployments) {
-        if (this.conf.deployments.hasOwnProperty(index)) {
-            depWeight = this.conf.deployments[index].weight;
+    for (var label in this.conf.deployments) {
+        if (this.conf.deployments.hasOwnProperty(label)) {
+            depWeight = this.conf.deployments[label].weight;
             if (randomNumber < depWeight) {
-                return index;
+                return label;
             } else {
                 randomNumber = randomNumber - depWeight;
             }

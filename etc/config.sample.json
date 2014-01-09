@@ -8,13 +8,13 @@
 
   "deployments": 
     {
-      "A" : 
+      "A": 
       {
         "host": "www.uniplaces.com",
         "port": "80",
         "weight": "600"
       },    
-      "B" : 
+      "B": 
       {
         "host": "www.uniplaces.pt",
         "port": "80",
