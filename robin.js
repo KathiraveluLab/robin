@@ -70,9 +70,9 @@ Robin.prototype.generateDeploymentLabel = function (maxWeight) {
             } else {
                 randomNumber = randomNumber - depWeight;
             }
-            return label;
         }
     }
+    return label;
 }
 
 Robin.prototype.generateRandomNumber = function (maxWeight) {
