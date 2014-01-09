@@ -6,18 +6,6 @@ Robin.prototype.defaultPort = 80;
 
 function Robin(conf) {
     this.conf = conf;
-    this.defaultDeploymentLabel = this.getDefaultDeploymentLabel();
-}
-
-Robin.prototype.getDefaultDeploymentLabel = function () {
-    for (var label in this.conf.deployments) {
-        if (this.conf.deployments.hasOwnProperty(label)) {
-            if (this.conf.deployments[label].host == this.conf.default_deployment && 
-                this.conf.deployments[label].port == this.conf.default_deployment_port) {
-                return label;
-            }    
-        }
-    }
 }
 
 Robin.prototype.getProxyPort = function () {
@@ -66,7 +54,7 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentL
     if (typeof this.conf.deployments[deploymentLabel] != 'undefined') { //valid cookie in the request
         target = this.conf.deployments[deploymentLabel];
     } else { // no valid cookie found in the request
-        target = this.conf.deployments[this.defaultDeploymentLabel];
+        target = this.conf.default_deployment;
     }
     proxy.proxyRequest(req, res, target); 
 }
@@ -82,7 +70,7 @@ Robin.prototype.generateDeploymentLabel = function (maxWeight) {
             } else {
                 randomNumber = randomNumber - depWeight;
             }
-            return this.defaultDeploymentLabel;
+            return label;
         }
     }
 }

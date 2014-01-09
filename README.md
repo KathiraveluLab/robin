@@ -44,21 +44,20 @@ Sample can be found at etc/config.sample.json.
 {
   "cookie_name": "uniplaces", <-- The name of the cookie.->
   "expires": "2592000000", <-- expired after, in milliseconds.->
-  "default_deployment": "www.uniplaces.com", <-- The default deployment.->
-  "default_deployment_port": "80", <-- optional. Default, 80.->
+  "default_deployment": { 
+      "host": "www.uniplaces.com", <-- The default deployment.->
+      "port": "80" <-- optional. Default, 80.->
+  },
   "proxy_port": "8000", <-- Optional port for the proxy. Default, 80.->
   "max_weight": "1000", <-- Optional. Default, 1000.->
 
-  "deployments": 
-    {
-      "A" : <-- Label of the deployment. Also the cookie value. A string value.->
-      {
+  "deployments": {
+      "A": { <-- Label of the deployment. Also the cookie value. A string value.->
         "host": "www.uniplaces.com",
-        "port": "80", <-- optional. Default, 80.->
+        "port": "80", "80", <-- optional. Default, 80.->
         "weight": "600"
       },    
-      "B" : 
-      {
+      "B": {
         "host": "www.uniplaces.pt",
         "port": "80",
         "weight": "400"
