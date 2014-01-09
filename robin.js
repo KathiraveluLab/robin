@@ -16,6 +16,7 @@ Robin.prototype.getExpiryTime = function () {
     var currentTimeInMillis = new Date().getTime();
     var expires = parseInt(this.conf.expires);
     var expiryTime = new Date(currentTimeInMillis + expires);
+    
     return expiryTime;
 }
 
@@ -33,7 +34,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
 Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     var cookies = new Cookies(req, res);
     var maxWeight = this.conf.max_weight || this.maximumWeight; // "max_weight" is optional in config.json.
-    var deploymentLabel = this.generateDeploymentLabel(maxWeight);  
+    var deploymentLabel = this.getRandomDeploymentLabel(maxWeight);  
 
     var target = this.conf.deployments[deploymentLabel];
     var cookieName = this.conf.cookie_name;
@@ -51,6 +52,7 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
 
 Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentLabel) {
     var target;
+
     if (typeof this.conf.deployments[deploymentLabel] != 'undefined') { //valid cookie in the request
         target = this.conf.deployments[deploymentLabel];
     } else { // no valid cookie found in the request
@@ -59,9 +61,10 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentL
     proxy.proxyRequest(req, res, target); 
 }
 
-Robin.prototype.generateDeploymentLabel = function (maxWeight) {
+Robin.prototype.getRandomDeploymentLabel = function (maxWeight) {
     var randomNumber = this.generateRandomNumber(maxWeight);
     var depWeight;
+
     for (var label in this.conf.deployments) {
         if (this.conf.deployments.hasOwnProperty(label)) {
             depWeight = this.conf.deployments[label].weight;
@@ -76,7 +79,8 @@ Robin.prototype.generateDeploymentLabel = function (maxWeight) {
 }
 
 Robin.prototype.generateRandomNumber = function (maxWeight) {
-    var randomNumber = Math.ceil(Math.random() * maxWeight);   
+    var randomNumber = Math.ceil(Math.random() * maxWeight);  
+
     return randomNumber;
 }
 
