@@ -88,7 +88,7 @@ Robin.prototype.generateDeploymentLabel = function (maxWeight) {
 }
 
 Robin.prototype.generateRandomNumber = function (maxWeight) {
-    var randomNumber = Math.ceil( Math.random() * maxWeight );   
+    var randomNumber = Math.ceil(Math.random() * maxWeight);   
     return randomNumber;
 }
 
