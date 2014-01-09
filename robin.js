@@ -16,7 +16,7 @@ Robin.prototype.getExpiryTime = function () {
     var currentTimeInMillis = new Date().getTime();
     var expires = parseInt(this.conf.expires);
     var expiryTime = new Date(currentTimeInMillis + expires);
-    
+
     return expiryTime;
 }
 
@@ -44,7 +44,6 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
     
     res.writeHead = function(statusCode, headers) {
         cookies.set(cookieName, deploymentLabel, {expires: expiryTime}, {domain: req.headers.host});
-        res.setHeader('content-type', 'text/html');
         res.oldWriteHead(statusCode, headers);
     }
     proxy.proxyRequest(req, res, target); 
@@ -52,7 +51,7 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
 
 Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentLabel) {
     var target;
-
+    
     if (typeof this.conf.deployments[deploymentLabel] != 'undefined') { //valid cookie in the request
         target = this.conf.deployments[deploymentLabel];
     } else { // no valid cookie found in the request
