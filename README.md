@@ -69,6 +69,10 @@ Sample can be found at etc/config.sample.json.
 From the robin root directory
 ./Robin
 
+### View the logs
+The logs are by default printed and stored to the log file, robin.log
+This file includes the access logs in NCSA Common log format.
+
 To be able to bind port 80 to the proxy
 sudo setcap 'cap_net_bind_service=+ep' path_to_node
 For example,

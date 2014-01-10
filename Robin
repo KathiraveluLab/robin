@@ -1,1 +1,6 @@
-node robinInit
+# node robinInit.js >> log_file_name
+# This appends the output to the specified log file.
+# To replace the existing file each time robin is started, use,
+# node robinInit.js > robin.log
+
+node robinInit.js >> robin.log
