@@ -8,6 +8,7 @@ Robin
 * Based on the weight function, directs the traffic to the deployments.
 * Uses cookies to facilitate stickiness, such that the same deployment
 will be used to serve the same user till the cookie expires.
+* Logs the accesses to the log file.
 
 
 ### Directory Structure
@@ -25,16 +26,16 @@ will be used to serve the same user till the cookie expires.
 ### Installing Node and npm
 If you are entirely new to NodeJs, you may have to install NodeJS and npm first.
 * Install Node.js on Ubuntu.
-sudo apt-get install nodejs 
+$ sudo apt-get install nodejs 
 
 * Install npm (node package manager)
 sudo su
-curl https://npmjs.org/install.sh | sh
+$ curl https://npmjs.org/install.sh | sh
 
 
 ### Installing Robin
 * To install Robin, installing the dependencies,
-npm install 
+$ npm install 
 from the robin root directory
 
 ### Configuration
@@ -67,17 +68,17 @@ Sample can be found at etc/config.sample.json.
 
 ### To run
 From the robin root directory
-./Robin
+$ ./Robin
 
 ### View the logs
 The logs are by default printed and stored to the log file, robin.log.
 This file includes the access logs in NCSA Common log format.
 
-To be able to bind port 80 to the proxy
-sudo setcap 'cap_net_bind_service=+ep' path_to_node
-For example,
-sudo setcap 'cap_net_bind_service=+ep' /usr/bin/node
+### Setting the proxy_port
+proxy_port is an optional parameter in config.json. Default is, 80.
 
-Note: proxy_port is an optional parameter in config.json.
-"proxy_port": "8000",
-Default is, 80.
+Ports < 1024 are privileged and cannot be bound to a non-root process.
+To be able to bind port 80 or anyother privileged ports to Robin,
+$ sudo setcap 'cap_net_bind_service=+ep' path_to_node
+For example,
+$ sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
