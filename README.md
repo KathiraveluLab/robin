@@ -70,7 +70,7 @@ From the robin root directory
 ./Robin
 
 ### View the logs
-The logs are by default printed and stored to the log file, robin.log
+The logs are by default printed and stored to the log file, robin.log.
 This file includes the access logs in NCSA Common log format.
 
 To be able to bind port 80 to the proxy
