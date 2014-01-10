@@ -7,6 +7,6 @@ var configObject = etc().argv().env().etc();
 var robin = new Robin(configObject.toJSON());
 
 var server = httpProxy.createServer(function (req, res, proxy) {
-    accesslog(req, res); // logs the accesses.
     robin.proxyRequests(req, res, proxy);
+    accesslog(req, res); // logs the accesses.
 }).listen(robin.getProxyPort());
