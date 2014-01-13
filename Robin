@@ -1,10 +1,1 @@
-# To print the output to console,
-#  node robinInit.js
-# 
-# To send the output as a JSON to loggly,
-  node robinInit.js -loggly
-# 
-# To print the output to a log file,
-#  node robinInit.js -file <log_file_name>
-
-# node robinInit.js -file robin.log
+node robinInit

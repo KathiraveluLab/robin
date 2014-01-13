@@ -19,17 +19,5 @@
         "port": "80",
         "weight": "400"
       }  
-    },  
-    
-  "transports": {
-      "loggly": {
-        "subdomain": "your-subdomain",
-        "inputToken": "your-really-long-input-token",
-        "json": true,
-        "auth": {
-          "username": "your-username",
-          "password": "your-password"
-        }
-      }
-  }
+    }
 }

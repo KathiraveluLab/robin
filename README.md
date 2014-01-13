@@ -70,10 +70,6 @@ Sample can be found at etc/config.sample.json.
 From the robin root directory
 $ ./Robin
 
-### View the logs
-The logs are by default printed and stored to the log file, robin.log.
-This file includes the access logs in NCSA Common log format.
-
 ### Setting the proxy_port
 proxy_port is an optional parameter in config.json. Default is, 80.
 
