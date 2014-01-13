@@ -13,5 +13,5 @@ var server = httpProxy.createServer(function (req, res, proxy) {
 }).listen(robin.getProxyPort());
 
 robin.on('proxiedRequest', function(proxiedRequest) {
-	robinWinston.processLogs(proxiedRequest);
+    robinWinston.processLogs(proxiedRequest);
 });

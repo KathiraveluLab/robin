@@ -55,7 +55,6 @@ RobinWinston.prototype.processLogs = function(proxiedRequest) {
     winston.info(log);
 }
 
-// replace :variable and :{variable} in `s` with what's in `d`
 function template(s, d) {
   s = s.replace(/(:[a-zA-Z]+)/g, function(match, key) {
     return d[key] || '';
