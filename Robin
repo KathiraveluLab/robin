@@ -1,6 +1,10 @@
-# node robinInit.js >> log_file_name
-# This appends the output to the specified log file.
-# To replace the existing file each time robin is started, use,
-# node robinInit.js > log_file_name
+# To print the output to console,
+#  node robinInit.js
+# 
+# To send the output as a JSON to loggly,
+  node robinInit.js -loggly
+# 
+# To print the output to a log file,
+#  node robinInit.js -file <log_file_name>
 
-node robinInit.js
+# node robinInit.js -file robin.log

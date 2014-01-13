@@ -13,6 +13,8 @@
     "etc": ">= 0.4.0",
     "cookies": ">= 0.3.6",
     "winston": ">= 0.7.2",
-    "strftime": ">=0.7.0"
+    "strftime": ">=0.7.0",
+    "loggly": "1.0.x",
+    "winston-loggly": ">=1.0.1"
   }
 }
