@@ -12,6 +12,7 @@
     "http-proxy": ">= 0.10.4",
     "etc": ">= 0.4.0",
     "cookies": ">= 0.3.6",
-    "access-log": ">=0.3.5" 
+    "winston": ">= 0.7.2",
+    "strftime": ">=0.7.0"
   }
 }

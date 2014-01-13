@@ -1,12 +1,18 @@
 var httpProxy = require('http-proxy/lib/node-http-proxy'),
-    Cookies = require('cookies');
+    Cookies = require('cookies'),
+    util = require("util"),    
+    EventEmitter = require('events').EventEmitter;
 
 Robin.prototype.maximumWeight = 1000;
 Robin.prototype.defaultPort = 80;
 
 function Robin(conf) {
     this.conf = conf;
+    EventEmitter.call(this);
 }
+
+// Setting the prototype of Robin to a new object created from the parent class EventEmitter. 
+util.inherits(Robin, EventEmitter);
 
 Robin.prototype.getProxyPort = function () {
     return this.conf.proxy_port || this.defaultPort; // "proxy_port" is optional in config.json.
@@ -28,7 +34,7 @@ Robin.prototype.proxyRequests = function (req, res, proxy) {
         this.proxyRequestFirstTime(req, res, proxy);
     } else { //cookie found in the request
         this.proxySubsequentRequests(req, res, proxy, receivedCookieValue);
-    }    
+    }
 }
 
 Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
@@ -47,6 +53,7 @@ Robin.prototype.proxyRequestFirstTime = function (req, res, proxy) {
         res.oldWriteHead(statusCode, headers);
     }
     proxy.proxyRequest(req, res, target); 
+    this.emitEventsForRequests(req, res, target, deploymentLabel);
 }
 
 Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentLabel) {
@@ -58,6 +65,7 @@ Robin.prototype.proxySubsequentRequests = function (req, res, proxy, deploymentL
         target = this.conf.default_deployment;
     }
     proxy.proxyRequest(req, res, target); 
+    this.emitEventsForRequests(req, res, target, deploymentLabel);
 }
 
 Robin.prototype.getRandomDeploymentLabel = function (maxWeight) {
@@ -81,6 +89,16 @@ Robin.prototype.generateRandomNumber = function (maxWeight) {
     var randomNumber = Math.ceil(Math.random() * maxWeight);  
 
     return randomNumber;
+}
+
+Robin.prototype.emitEventsForRequests = function (req, res, target, deploymentLabel) {
+    var emittedObject = {
+        request: req,
+        response: res,
+        target: target,
+        label: deploymentLabel
+    }
+    this.emit('proxiedRequest', emittedObject);
 }
 
 module.exports = Robin;
