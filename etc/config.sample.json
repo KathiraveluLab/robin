@@ -15,7 +15,7 @@
         "weight": "600"
       },    
       "B": {
-        "host": "uniplaces.pt",
+        "host": "www.uniplaces.pt",
         "port": "80",
         "weight": "400"
       }  
