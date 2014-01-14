@@ -4,4 +4,4 @@
 # To print the output to a log file,
 #  node robinInit.js -l <log_file_name>
 
-node robinInit.js -l robin.log
+ node robinInit.js -l robin.log

@@ -1,4 +1,7 @@
-var _ = require('underscore')._;
+var _ = require('underscore')._,
+    util = require("util"),
+    winston = require('winston'),
+    LogProcessor = require('./logProcessor');
 
 var RobinWinston = function (robin, winston) {
 	this.robin = robin;
@@ -15,4 +18,19 @@ RobinWinston.prototype.handleEvent = function (event) {
 	this.winston.info(event);
 }
 
+var RobinCustomLogger = winston.transports.RobinCustomerLogger = function (options) {
+    this.name = 'robinCustomLogger';
+    this.level = options.level || 'info';
+    this.logProcessor = new LogProcessor();
+};
+
+util.inherits(RobinCustomLogger, winston.Transport);
+
+RobinCustomLogger.prototype.log = function (level, msg, meta, callback) { 
+    console.log(meta);
+    meta = this.logProcessor.processLogs(meta);
+    callback(null, true);
+};
+
 module.exports = RobinWinston;
+module.exports.RobinCustomLogger = RobinCustomLogger;
