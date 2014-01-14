@@ -27,7 +27,8 @@ var RobinCustomLogger = winston.transports.RobinCustomerLogger = function (optio
 util.inherits(RobinCustomLogger, winston.Transport);
 
 RobinCustomLogger.prototype.log = function (level, msg, meta, callback) { 
-    meta = this.logProcessor.processLogs(meta);
+    msg = this.logProcessor.processLogs(meta);
+    process.stdout.write(msg + '\n');
     callback(null, true);
 };
 
