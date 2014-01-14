@@ -20,7 +20,6 @@ RobinWinston.prototype.handleEvent = function (event) {
 
 var RobinCustomLogger = winston.transports.RobinCustomerLogger = function (options) {
     this.name = 'robinCustomLogger';
-    this.level = options.level || 'info';
     this.logProcessor = new LogProcessor();
 };
 

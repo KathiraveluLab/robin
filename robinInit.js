@@ -7,9 +7,11 @@ var httpProxy = require('http-proxy/lib/node-http-proxy'),
 var configObject = etc().argv().env().etc();
 var robin = new Robin(configObject.toJSON());
 
+winston.remove(winston.transports.Console);
 if (typeof process.argv[2] != 'undefined' && process.argv[2] === '-l') {
-    winston.remove(winston.transports.Console);
-    winston.add(RobinWinston.RobinCustomLogger, {filename: process.argv[3]});
+    winston.add(winston.transports.File, {filename: process.argv[3]});
+} else {
+    winston.add(RobinWinston.RobinCustomLogger);
 }
 
 var robinWinston = new RobinWinston(robin, winston);
