@@ -15,6 +15,8 @@ LogProcessor.prototype.processLogs = function(proxiedRequest) {
 
 LogProcessor.prototype.getMinimalRequestObject = function(proxiedRequest) {
     var minimalRequestObject, userID, end = new Date();
+    var requestLine = '\"' + proxiedRequest.request.method + ' ' + proxiedRequest.request.url + 
+        ' HTTP' + proxiedRequest.request.httpVersion + '\"';
 
     try {
         userID = new Buffer(proxiedRequest.request.headers.authorization.
@@ -27,10 +29,8 @@ LogProcessor.prototype.getMinimalRequestObject = function(proxiedRequest) {
         ip: proxiedRequest.request.connection.remoteAddress || '-',
         deploymentUrl: proxiedRequest.target.host,
         userId: userID,
-        clfDate: strftime('%d/%b/%Y:%H:%M:%S %z', end),
-        method: proxiedRequest.request.method,
-        url: proxiedRequest.request.url,
-        httpVersion: proxiedRequest.request.httpVersion,     
+        timestamp: '[' + strftime('%d/%b/%Y:%H:%M:%S %z', end) + ']',
+        requestLine: requestLine,     
         statusCode: proxiedRequest.response.statusCode,
         contentLength: proxiedRequest.response.getHeader('content-length') || 
             proxiedRequest.response.contentLength || '-',
@@ -38,6 +38,8 @@ LogProcessor.prototype.getMinimalRequestObject = function(proxiedRequest) {
         userAgent: proxiedRequest.request.headers['user-agent'] || '-',
         label: proxiedRequest.label
     }
+    // Format: IP of the Client, Deployment URL, User ID, Time, Method, Request Line, 
+    // HTTP Status Code, Content Length, Referring Page, User Agent, Label.
     return minimalRequestObject;
 }
 
