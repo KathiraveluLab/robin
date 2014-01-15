@@ -1,7 +1,7 @@
 var _ = require('underscore')._,
     util = require("util"),
     winston = require('winston'),
-    LogProcessor = require('./logProcessor');
+    strftime = require('strftime');
 
 var RobinWinston = function (robin, winston) {
 	this.robin = robin;
@@ -20,16 +20,55 @@ RobinWinston.prototype.handleEvent = function (event) {
 
 var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
     this.name = 'robinWinstonConsole';
-    this.logProcessor = new LogProcessor();
 };
 
 util.inherits(RobinWinstonConsole, winston.Transport);
 
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
-    msg = this.logProcessor.processLogs(meta);
+    msg = this.processLogs(meta);
     process.stdout.write(msg + '\n');
     callback(null, true);
 };
+
+RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
+    var formattedMessage = '';
+    var minimalRequestObject = this.getMinimalRequestObject(proxiedRequest);
+
+    for(var property in minimalRequestObject) {
+        formattedMessage += minimalRequestObject[property] + ' ';
+    }
+    return formattedMessage;
+}
+
+RobinWinstonConsole.prototype.getMinimalRequestObject = function(proxiedRequest) {
+    var minimalRequestObject, userID, end = new Date();
+    var requestLine = '\"' + proxiedRequest.request.method + ' ' + proxiedRequest.request.url + 
+        ' HTTP' + proxiedRequest.request.httpVersion + '\"';
+
+    try {
+        userID = new Buffer(proxiedRequest.request.headers.authorization.
+            split(' ')[1], 'base64').toString().split(':')[0];
+    } catch(e) {
+        userID = '-';
+    } 
+
+    minimalRequestObject = {
+        ip: proxiedRequest.request.connection.remoteAddress || '-',
+        deploymentUrl: proxiedRequest.target.host,
+        userId: userID,
+        timestamp: '[' + strftime('%d/%b/%Y:%H:%M:%S %z', end) + ']',
+        requestLine: requestLine,     
+        statusCode: proxiedRequest.response.statusCode,
+        contentLength: proxiedRequest.response.getHeader('content-length') || 
+            proxiedRequest.response.contentLength || '-',
+        referer: proxiedRequest.request.headers.referer || '-',
+        userAgent: proxiedRequest.request.headers['user-agent'] || '-',
+        label: proxiedRequest.label
+    }
+    // Format: IP of the Client, Deployment URL, User ID, Time, Method, Request Line, 
+    // HTTP Status Code, Content Length, Referring Page, User Agent, Label.
+    return minimalRequestObject;
+}
 
 module.exports = RobinWinston;
 module.exports.RobinWinstonConsole = RobinWinstonConsole;
