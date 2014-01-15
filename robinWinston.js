@@ -20,14 +20,27 @@ RobinWinston.prototype.handleEvent = function (event) {
 
 var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
     this.name = 'robinWinstonConsole';
-};
+    this.mode = 'console';
+    this.options = this.initialize(options);
+}
 
 util.inherits(RobinWinstonConsole, winston.Transport);
 
+RobinWinstonConsole.prototype.initialize = function (options) { 
+    if (typeof options != 'undefined' && typeof options.filename != 'undefined') {
+        this.mode = 'file';
+        return options;
+    }
+}
+
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
     meta = this.processLogs(meta);
-    winston.transports.Console.prototype.log(level, msg, meta, callback);
-};
+    if (this.mode == 'file') {
+        winston.transports.File.prototype.log(level, msg, meta, callback);
+    } else {
+        winston.transports.Console.prototype.log(level, msg, meta, callback);
+    }
+}
 
 RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
     var formattedMessage = '';
@@ -42,7 +55,7 @@ RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
 RobinWinstonConsole.prototype.getMinimalRequestObject = function(proxiedRequest) {
     var minimalRequestObject, userID, end = new Date();
     var requestLine = '\"' + proxiedRequest.request.method + ' ' + proxiedRequest.request.url + 
-        ' HTTP' + proxiedRequest.request.httpVersion + '\"';
+        ' HTTP/' + proxiedRequest.request.httpVersion + '\"';
 
     try {
         userID = new Buffer(proxiedRequest.request.headers.authorization.
