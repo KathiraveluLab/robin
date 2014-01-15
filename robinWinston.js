@@ -20,6 +20,7 @@ RobinWinston.prototype.handleEvent = function (event) {
 
 var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
     this.name = 'robinWinstonConsole';
+    this.level = 'info';
     this.mode = 'console';
     this.options = this.initialize(options);
 }
@@ -27,8 +28,9 @@ var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (opt
 util.inherits(RobinWinstonConsole, winston.Transport);
 
 RobinWinstonConsole.prototype.initialize = function (options) { 
-    if (typeof options != 'undefined' && typeof options.filename != 'undefined') {
-        this.mode = 'file';
+    if (typeof options != 'undefined') {
+        this.level = options.level || 'info';
+        this.mode = typeof options.filename != 'undefined' ? 'file' : 'console';
         return options;
     }
 }
