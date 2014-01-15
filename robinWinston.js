@@ -18,18 +18,18 @@ RobinWinston.prototype.handleEvent = function (event) {
 	this.winston.info(event);
 }
 
-var RobinCustomLogger = winston.transports.RobinCustomerLogger = function (options) {
-    this.name = 'robinCustomLogger';
+var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
+    this.name = 'robinWinstonConsole';
     this.logProcessor = new LogProcessor();
 };
 
-util.inherits(RobinCustomLogger, winston.Transport);
+util.inherits(RobinWinstonConsole, winston.Transport);
 
-RobinCustomLogger.prototype.log = function (level, msg, meta, callback) { 
+RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
     msg = this.logProcessor.processLogs(meta);
     process.stdout.write(msg + '\n');
     callback(null, true);
 };
 
 module.exports = RobinWinston;
-module.exports.RobinCustomLogger = RobinCustomLogger;
+module.exports.RobinWinstonConsole = RobinWinstonConsole;

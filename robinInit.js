@@ -11,7 +11,7 @@ winston.remove(winston.transports.Console);
 if (typeof process.argv[2] != 'undefined' && process.argv[2] === '-l') {
     winston.add(winston.transports.File, {filename: process.argv[3]});
 } else {
-    winston.add(RobinWinston.RobinCustomLogger);
+    winston.add(RobinWinston.RobinWinstonConsole);
 }
 
 var robinWinston = new RobinWinston(robin, winston);
