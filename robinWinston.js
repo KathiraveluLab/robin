@@ -25,9 +25,8 @@ var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (opt
 util.inherits(RobinWinstonConsole, winston.Transport);
 
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
-    msg = this.processLogs(meta);
-    process.stdout.write(msg + '\n');
-    callback(null, true);
+    meta = this.processLogs(meta);
+    winston.transports.Console.prototype.log(level, msg, meta, callback);
 };
 
 RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
