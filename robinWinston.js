@@ -38,13 +38,14 @@ RobinWinstonConsole.prototype.initialize = function (options) {
 }
 
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
-    meta = this.processLogs(meta);
+    var processedMessage = this.processLogs(meta);
+
     if (this.mode == 'file') {
-        this.winston.add(winston.transports.File, {filename: this.options.filename}).
-            remove(RobinWinston.RobinWinstonConsole);
-        this.winston.transports.File.prototype.log(level, msg, meta, callback);
+        this.winston.add(winston.transports.File, {filename: this.options.filename}). 
+            remove(this);
+        this.winston.info(processedMessage);
     } else {
-        winston.transports.Console.prototype.log(level, msg, meta, callback);
+        winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
     }
 }
 
