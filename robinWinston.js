@@ -52,7 +52,7 @@ RobinWinstonConsole.prototype.logToFile = function (msg, file) {
         if(error) {
             winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
         }
-    }
+    });
 }
 
 RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
@@ -66,7 +66,7 @@ RobinWinstonConsole.prototype.processLogs = function(proxiedRequest) {
 }
 
 RobinWinstonConsole.prototype.getMinimalRequestObject = function(proxiedRequest) {
-    var minimalRequestObject, userID, end = new Date();
+    var minimalRequestObject, userID, time = new Date();
     var requestLine = '\"' + proxiedRequest.request.method + ' ' + proxiedRequest.request.url + 
         ' HTTP/' + proxiedRequest.request.httpVersion + '\"';
 
@@ -81,7 +81,7 @@ RobinWinstonConsole.prototype.getMinimalRequestObject = function(proxiedRequest)
         ip: proxiedRequest.request.connection.remoteAddress || '-',
         deploymentUrl: proxiedRequest.target.host,
         userId: userID,
-        timestamp: '[' + strftime('%d/%b/%Y:%H:%M:%S %z', end) + ']',
+        timestamp: '[' + strftime('%d/%b/%Y:%H:%M:%S %z', time) + ']',
         requestLine: requestLine,     
         statusCode: proxiedRequest.response.statusCode,
         contentLength: proxiedRequest.response.getHeader('content-length') || 
