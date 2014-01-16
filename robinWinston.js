@@ -1,7 +1,9 @@
 var _ = require('underscore')._,
     util = require("util"),
+    fs = require('fs'),
     winston = require('winston'),
-    strftime = require('strftime');
+    strftime = require('strftime'),
+    endOfLine = require('os').EOL;
 
 var RobinWinston = function (robin, winston) {
 	this.robin = robin;
@@ -19,7 +21,6 @@ RobinWinston.prototype.handleEvent = function (event) {
 }
 
 var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
-    this.winston;
     this.name = 'robinWinstonConsole';
     this.level = 'info';
     this.mode = 'console';
@@ -32,18 +33,18 @@ RobinWinstonConsole.prototype.initialize = function (options) {
     if (typeof options != 'undefined') {
         this.level = options.level || 'info';
         this.mode = typeof options.filename != 'undefined' ? 'file' : 'console';
-        this.winston = options.winston;
         return options;
     }
 }
 
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
     var processedMessage = this.processLogs(meta);
-
     if (this.mode == 'file') {
-        this.winston.add(winston.transports.File, {filename: this.options.filename}). 
-            remove(this);
-        this.winston.info(processedMessage);
+        fs.appendFile(this.options.filename, processedMessage + endOfLine, function(error) {
+            if(error) {
+                winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
+            }
+        });     
     } else {
         winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
     }
