@@ -1,5 +1,5 @@
 var _ = require('underscore')._,
-    util = require("util"),
+    util = require('util'),
     fs = require('fs'),
     winston = require('winston'),
     strftime = require('strftime'),
