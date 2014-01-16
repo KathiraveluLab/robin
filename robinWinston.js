@@ -48,7 +48,7 @@ RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) {
 }
 
 RobinWinstonConsole.prototype.logToFile = function (level, msg, processedMessage, callback, file) { 
-    fs.appendFile(this.options.filename, processedMessage + endOfLine, function(error) {
+    fs.appendFile(file, processedMessage + endOfLine, function(error) {
         if(error) {
             winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
         }
