@@ -39,14 +39,19 @@ RobinWinstonConsole.prototype.initialize = function (options) {
 
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
     var processedMessage = this.processLogs(meta);
+
     if (this.mode == 'file') {
-        fs.appendFile(this.options.filename, processedMessage + endOfLine, function(error) {
-            if(error) {
-                winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
-            }
-        });     
+        this.logToFile(processedMessage, this.options.filename);    
     } else {
         winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
+    }
+}
+
+RobinWinstonConsole.prototype.logToFile = function (msg, file) { 
+    fs.appendFile(this.options.filename, processedMessage + endOfLine, function(error) {
+        if(error) {
+            winston.transports.Console.prototype.log(level, msg, processedMessage, callback);
+        }
     }
 }
 
