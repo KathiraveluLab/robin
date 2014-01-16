@@ -9,7 +9,11 @@ var robin = new Robin(configObject.toJSON());
 
 winston.remove(winston.transports.Console);
 if (typeof process.argv[2] != 'undefined' && process.argv[2] === '-l') {
-    winston.add(RobinWinston.RobinWinstonConsole, {filename: process.argv[3]});
+	var options = {
+        winston: winston,
+		filename: process.argv[3]
+	};
+    winston.add(RobinWinston.RobinWinstonConsole, options);
 } else {
     winston.add(RobinWinston.RobinWinstonConsole);
 }

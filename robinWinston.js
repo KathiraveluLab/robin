@@ -19,6 +19,7 @@ RobinWinston.prototype.handleEvent = function (event) {
 }
 
 var RobinWinstonConsole = winston.transports.RobinWinstonConsole = function (options) {
+    this.winston;
     this.name = 'robinWinstonConsole';
     this.level = 'info';
     this.mode = 'console';
@@ -31,6 +32,7 @@ RobinWinstonConsole.prototype.initialize = function (options) {
     if (typeof options != 'undefined') {
         this.level = options.level || 'info';
         this.mode = typeof options.filename != 'undefined' ? 'file' : 'console';
+        this.winston = options.winston;
         return options;
     }
 }
@@ -38,7 +40,9 @@ RobinWinstonConsole.prototype.initialize = function (options) {
 RobinWinstonConsole.prototype.log = function (level, msg, meta, callback) { 
     meta = this.processLogs(meta);
     if (this.mode == 'file') {
-        winston.transports.File.prototype.log(level, msg, meta, callback);
+        this.winston.add(winston.transports.File, {filename: this.options.filename}).
+            remove(RobinWinston.RobinWinstonConsole);
+        this.winston.transports.File.prototype.log(level, msg, meta, callback);
     } else {
         winston.transports.Console.prototype.log(level, msg, meta, callback);
     }
