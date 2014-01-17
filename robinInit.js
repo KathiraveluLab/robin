@@ -1,7 +1,8 @@
 var httpProxy = require('http-proxy/lib/node-http-proxy'),
     etc = require('etc'),
     winston = require('winston'),
-    RobinWinston = require('./robinWinston'),      
+    RobinWinston = require('./robinWinston'),
+    RobinWinstonConsole = require('./robinWinstonConsole'),
     Robin = require('./robin');
 
 var configObject = etc().argv().env().etc();
@@ -9,9 +10,9 @@ var robin = new Robin(configObject.toJSON());
 
 winston.remove(winston.transports.Console);
 if (typeof process.argv[2] != 'undefined' && process.argv[2] === '-l') {
-    winston.add(RobinWinston.RobinWinstonConsole, {filename:process.argv[3]});
+    winston.add(RobinWinstonConsole, {filename:process.argv[3]});
 } else {
-    winston.add(RobinWinston.RobinWinstonConsole);
+    winston.add(RobinWinstonConsole);
 }
 
 var robinWinston = new RobinWinston(robin, winston);
