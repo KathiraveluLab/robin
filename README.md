@@ -8,7 +8,7 @@ Robin
 * Based on the weight function, directs the traffic to the deployments.
 * Uses cookies to facilitate stickiness, such that the same deployment
 will be used to serve the same user till the cookie expires.
-* Logs the accesses to the log file.
+* Logs the accesses to a log file or console based on the parameters given to Robin.
 
 
 ### Directory Structure
@@ -19,9 +19,11 @@ will be used to serve the same user till the cookie expires.
 │   ├── package.json
 │   ├── README.md
 │   ├── Robin
+│   ├── robinInit.js
 │   ├── robin.js
-│   └── robinInit.js
-
+│   ├── robin.log
+│   ├── robinWinstonConsole.js
+│   └── robinWinston.js
 
 ### Installing Node and npm
 If you are entirely new to NodeJs, you may have to install NodeJS and npm first.
