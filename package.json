@@ -11,6 +11,10 @@
   "dependencies": {
     "http-proxy": ">= 0.10.4",
     "etc": ">= 0.4.0",
-    "cookies": ">= 0.3.6"
+    "cookies": ">= 0.3.6",
+    "winston": ">= 0.7.2",
+    "strftime": ">=0.7.0",
+    "underscore": ">= 1.5.2",
+    "fs": ">= 0.10.24"
   }
 }
