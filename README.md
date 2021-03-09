@@ -12,6 +12,7 @@ will be used to serve the same user till the cookie expires.
 
 
 ### Directory Structure
+```
 ├── robin
 │   ├── etc
 │   │   └── config.sample.json
@@ -24,7 +25,7 @@ will be used to serve the same user till the cookie expires.
 │   ├── robin.log
 │   ├── robinWinstonConsole.js
 │   └── robinWinston.js
-
+```
 ### Installing Node and npm
 If you are entirely new to NodeJs, you may have to install NodeJS and npm first.
 * Install Node.js on Ubuntu.
