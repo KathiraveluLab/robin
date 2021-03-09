@@ -44,7 +44,7 @@ from the robin root directory
 ### Configuration
 Create the configuration file config.json.
 Sample can be found at etc/config.sample.json.
-
+```
 {
   "cookie_name": "uniplaces", <-- The name of the cookie.->
   "expires": "2592000000", <-- expired after, in milliseconds.->
@@ -68,16 +68,20 @@ Sample can be found at etc/config.sample.json.
       }  
     }
 }
-
+```
 ### To run
-From the robin root directory
+From the robin root directory,
+```
 $ ./Robin
+```
 
 ### Setting the proxy_port
 proxy_port is an optional parameter in config.json. Default is, 80.
 
 Ports < 1024 are privileged and cannot be bound to a non-root process.
 To be able to bind port 80 or anyother privileged ports to Robin,
+```
 $ sudo setcap 'cap_net_bind_service=+ep' path_to_node
+```
 For example,
 $ sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
