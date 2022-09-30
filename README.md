@@ -28,17 +28,24 @@ will be used to serve the same user till the cookie expires.
 ```
 ### Installing Node and npm
 If you are entirely new to NodeJs, you may have to install NodeJS and npm first.
+
 * Install Node.js on Ubuntu.
+```
 $ sudo apt-get install nodejs 
+```
 
 * Install npm (node package manager)
-sudo su
-$ curl https://npmjs.org/install.sh | sh
+```
+$ sudo su
 
+# curl https://npmjs.org/install.sh | sh
+```
 
 ### Installing Robin
 * To install Robin, installing the dependencies,
+```
 $ npm install 
+```
 from the robin root directory
 
 ### Configuration
@@ -84,4 +91,6 @@ To be able to bind port 80 or anyother privileged ports to Robin,
 $ sudo setcap 'cap_net_bind_service=+ep' path_to_node
 ```
 For example,
+```
 $ sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
+```
