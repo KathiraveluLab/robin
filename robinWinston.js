@@ -1,9 +1,8 @@
-var _ = require('underscore')._;
 
 var RobinWinston = function (robin, winston) {
     this.robin = robin;
     this.winston = winston;
-    _.bindAll(this, 'handleEvent');
+    this.handleEvent = this.handleEvent.bind(this);
     this.init();
 }
 
