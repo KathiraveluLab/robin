@@ -27,7 +27,7 @@ will be used to serve the same user till the cookie expires.
 │   └── robinWinston.js
 ```
 ### Installing Node and npm
-If you are entirely new to NodeJs, you may have to install NodeJS and npm first.
+You need to install NodeJS and npm first.
 
 * Install Node.js on Ubuntu.
 ```
@@ -42,7 +42,7 @@ $ sudo su
 ```
 
 ### Installing Robin
-* To install Robin, installing the dependencies,
+* To install Robin, install the dependencies,
 ```
 $ npm install 
 ```
@@ -83,10 +83,10 @@ $ ./Robin
 ```
 
 ### Setting the proxy_port
-proxy_port is an optional parameter in config.json. Default is, 80.
+proxy_port is an optional parameter in config.json. Default is 80.
 
 Ports < 1024 are privileged and cannot be bound to a non-root process.
-To be able to bind port 80 or anyother privileged ports to Robin,
+To be able to bind port 80 or any other privileged ports to Robin,
 ```
 $ sudo setcap 'cap_net_bind_service=+ep' path_to_node
 ```
